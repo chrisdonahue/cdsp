@@ -21,7 +21,12 @@ namespace cdsp { namespace helpers {
 	extern types::boolean is_power_of_two(types::disc_32_u n);
 
 	// wavetable helpers
-	extern void sine_sum(std::set<std::tuple<types::cont_64, types::cont_64, types::cont_64> > partials, types::disc_32_u buffer_length, types::sample* buffer);
+	namespace generators {
+		extern void sinusoid_sum(std::set<std::tuple<types::cont_64, types::cont_64, types::cont_64> > partials, types::disc_32_u buffer_length, types::sample* buffer);
+		extern void sinusoid(types::disc_32_u buffer_length, types::sample* buffer, types::cont_64 frequency=1.0, types::cont_64 amplitude=1.0, types::cont_64 phase=0.0);
+		extern void sine(types::disc_32_u buffer_length, types::sample* buffer);
+		extern void cosine(types::disc_32_u buffer_length, types::sample* buffer);
+	}
 
 	// range mappers
 	template <typename T> void range_map_linear(T w, T x, T y, T z, T& m, T& b) {

@@ -17,6 +17,10 @@ namespace cdsp { namespace values {
 	const types::cont_32 zero_32			= 0.0f;
 	const types::cont_64 zero_64			= 0.0;
 
+	// one
+	const types::cont_32 one_32				= 1.0f;
+	const types::cont_64 one_64				= 1.0;
+
 	// infinity
 	const types::cont_32 infinity_n_32		= -1.0f * std::numeric_limits<types::cont_32>::infinity();
 	const types::cont_32 infinity_32		= std::numeric_limits<types::cont_32>::infinity();

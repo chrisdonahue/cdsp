@@ -13,7 +13,7 @@ cdsp::types::boolean cdsp::helpers::is_power_of_two(types::disc_32_u n) {
 	return true;
 };
 
-void cdsp::helpers::sine_sum(std::set<std::tuple<types::cont_64, types::cont_64, types::cont_64> > partials, types::disc_32_u buffer_length, types::sample* buffer) {
+void cdsp::helpers::generators::sinusoid_sum(std::set<std::tuple<types::cont_64, types::cont_64, types::cont_64> > partials, types::disc_32_u buffer_length, types::sample* buffer) {
 	if (buffer_length == 0) {
 		throw exceptions::runtime("cdsp::helpers::sine_sum: buffer_length is 0");
 	}
@@ -32,7 +32,7 @@ void cdsp::helpers::sine_sum(std::set<std::tuple<types::cont_64, types::cont_64,
 		types::cont_64 index_value = values::two_pi_64 * harmonic_phase;
 		types::cont_64 index_increment = (values::two_pi_64 / static_cast<types::cont_64>(buffer_length)) * harmonic_freq;
 		for (types::disc_32_u i = 0; i < buffer_length; i++) {
-			buffer[i] += static_cast<types::sample>(harmonic_amp * sin(index_value));
+			buffer[i] += static_cast<types::sample>(harmonic_amp * cos(index_value));
 			index_value += index_increment;
 		}
 	}
@@ -50,6 +50,21 @@ void cdsp::helpers::sine_sum(std::set<std::tuple<types::cont_64, types::cont_64,
 			buffer[i] *= max_inverse;
 		}
 	}
+}
+
+void cdsp::helpers::generators::sinusoid(types::disc_32_u buffer_length, types::sample* buffer, types::cont_64 frequency, types::cont_64 amplitude, types::cont_64 phase) {
+	std::set<std::tuple<types::cont_64, types::cont_64, types::cont_64> > partials;
+	partials.insert(std::make_tuple(frequency, amplitude, phase));
+
+	sinusoid_sum(partials, buffer_length, buffer);
+}
+
+void cdsp::helpers::generators::sine(types::disc_32_u buffer_length, types::sample* buffer) {
+	sinusoid(buffer_length, buffer, values::one_64, values::one_64, static_cast<types::cont_64>(-0.25));
+}
+
+void cdsp::helpers::generators::cosine(types::disc_32_u buffer_length, types::sample* buffer) {
+	sinusoid(buffer_length, buffer, values::one_64, values::one_64, values::zero_64);
 }
 
 cdsp::types::cont_32 cdsp::helpers::inverse_memoized(types::cont_64 x) {
