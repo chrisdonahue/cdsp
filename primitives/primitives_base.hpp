@@ -33,17 +33,7 @@ namespace cdsp { namespace primitives {
 				(it.second)->release();
 			}
 		};
-		virtual void perform(sample_buffer& buffer, types::disc_32_u block_size_leq, types::channel offset_channel = 0, types::disc_32_u offset_sample = 0) = 0 {
-			dsp::perform(buffer, block_size_leq, offset_channel, offset_sample);
-
-#ifdef CDSP_DEBUG_DSP
-			types::channel required_num = channels_input_num > channels_output_num ? channels_input_num : channels_output_num;
-			if (buffer.channels_num_get() < required_num + offset_channel) {
-				throw exceptions::runtime("cdsp::dsp::perform: insufficient number of channels");
-			}
-			// TODO: check buffer length in regardess to block_size_leq and offset_sample
-#endif
-		};
+		virtual void perform(sample_buffer& buffer, types::disc_32_u block_size_leq, types::channel offset_channel = 0, types::disc_32_u offset_sample = 0) = 0;
 
 		// channels
 		types::channel channels_input_num_get() {

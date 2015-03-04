@@ -1,6 +1,8 @@
 #ifndef CDSP_PRIMITIVES_ENVELOPES_ADSR
 #define CDSP_PRIMITIVES_ENVELOPES_ADSR
 
+#include "../primitives_base.hpp"
+
 namespace cdsp { namespace primitives { namespace envelopes {
 	class adsr {
 	public:
