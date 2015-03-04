@@ -10,7 +10,7 @@
 #include "types.hpp"
 #include "values.hpp"
 
-#include "primitive/primitive_base.hpp"
+#include "primitives/primitives_base.hpp"
 
 namespace cdsp {
 	class graph : public dsp {
@@ -24,7 +24,7 @@ namespace cdsp {
 		void perform();
 
 		// add and remove nodes
-		types::disc_32_u node_add(primitive::base* _primitive);
+		types::disc_32_u node_add(primitives::base* _primitive);
 		void node_remove(types::disc_32_u id);
 
 		// plug to output
@@ -46,7 +46,7 @@ namespace cdsp {
 	private:
 		class node {
 		public:
-			node(primitive::base* _primitive);
+			node(primitives::base* _primitive);
 			~node();
 
 		private:

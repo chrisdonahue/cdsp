@@ -1,7 +1,7 @@
 #ifndef CDSP_PRIMITIVES_OPERATORS_BASE
 #define CDSP_PRIMITIVES_OPERATORS_BASE
 
-#include "../primitive_base.hpp"
+#include "../primitives_base.hpp"
 
 namespace cdsp { namespace primitives { namespace operators {
 	class base : public primitives::base {

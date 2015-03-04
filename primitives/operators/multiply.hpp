@@ -1,18 +1,19 @@
-/*
-  ==============================================================================
+#ifndef CDSP_PRIMITIVES_OPERATORS_MULTIPLY
+#define CDSP_PRIMITIVES_OPERATORS_MULTIPLY
 
-    multiply.h
-    Created: 3 Mar 2015 3:48:13pm
-    Author:  Chris
+#include "operators_base.hpp"
 
-  ==============================================================================
-*/
+namespace cdsp {
+	namespace primitives {
+		namespace operators {
+			class multiply : public base {
+			public:
+				using base::base;
 
-#ifndef MULTIPLY_H_INCLUDED
-#define MULTIPLY_H_INCLUDED
+				void perform(sample_buffer& buffer, types::disc_32_u block_size_leq, types::channel offset_channel = 0, types::disc_32_u offset_sample = 0);
+			};
+		}
+	}
+}
 
-
-
-
-
-#endif  // MULTIPLY_H_INCLUDED
+#endif

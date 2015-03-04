@@ -32,6 +32,8 @@ namespace cdsp { namespace values {
 	const types::cont_64 nan_64					= std::numeric_limits<types::cont_64>::signaling_NaN();
 
 #ifdef CDSP_SAMPLE_32
+	const types::sample sample_zero				= static_cast<types::sample>(0.0f);
+	const types::sample sample_one				= static_cast<types::sample>(1.0f);
 	const types::sample sample_silence			= static_cast<types::sample>(0.0f);
 	const types::sample sample_line_level_n		= static_cast<types::sample>(-1.0f);
 	const types::sample sample_line_level		= static_cast<types::sample>(1.0f);

@@ -9,6 +9,7 @@
 #include "../parameter.hpp"
 #include "../sample_buffer.hpp"
 #include "../types.hpp"
+#include "../values.hpp"
 
 namespace cdsp { namespace primitives {
 	class base : public dsp {
