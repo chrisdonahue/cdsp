@@ -10,10 +10,14 @@
 #include "../sample_buffer.hpp"
 #include "../types.hpp"
 
-namespace cdsp { namespace primitive {
+namespace cdsp { namespace primitives {
 	class base : public dsp {
 	public:
-		base() : dsp() {};
+		base() : dsp(),
+			channels_input_num(0),
+			channels_output_num(0)
+		{
+		};
 
 		// dsp
 		virtual void prepare(types::cont_64 _sample_rate, types::disc_32_u _block_size) {
@@ -23,9 +27,30 @@ namespace cdsp { namespace primitive {
 			}
 		};
 		virtual void release() {
+			dsp::release();
 			for (auto it : parameter_plugs) {
 				(it.second)->release();
 			}
+		};
+		virtual void perform(sample_buffer& buffer, types::disc_32_u block_size_leq, types::channel offset_channel = 0, types::disc_32_u offset_sample = 0) = 0 {
+			dsp::perform(buffer, block_size_leq, offset_channel, offset_sample);
+
+#ifdef CDSP_DEBUG_DSP
+			types::channel required_num = channels_input_num > channels_output_num ? channels_input_num : channels_output_num;
+			if (buffer.channels_num_get() < required_num + offset_channel) {
+				throw exceptions::runtime("cdsp::dsp::perform: insufficient number of channels");
+			}
+			// TODO: check buffer length in regardess to block_size_leq and offset_sample
+#endif
+		};
+
+		// channels
+		types::channel channels_input_num_get() {
+			return channels_input_num;
+		};
+
+		types::channel channels_output_num_get() {
+			return channels_output_num;
 		};
 
 		// plugs
@@ -42,8 +67,13 @@ namespace cdsp { namespace primitive {
 		};
 
 	protected:
-		types::disc_32_u channels_input_num;
-		types::disc_32_u channels_output_num;
+		void channels_input_num_set(types::channel _channels_input_num) {
+			channels_input_num = _channels_input_num;
+		};
+
+		void channels_output_num_set(types::channel _channels_output_num) {
+			channels_output_num = _channels_output_num;
+		};
 
 		void parameter_plug_register(types::string parameter_specifier) {
 			// TODO: throw runtime error if already exists
@@ -61,6 +91,9 @@ namespace cdsp { namespace primitive {
 		};
 
 	private:
+		types::channel channels_input_num;
+		types::channel channels_output_num;
+
 		std::set<types::string> parameter_plug_specifiers;
 		std::unordered_map<types::string, parameter::signal*> parameter_plugs;
 	};

@@ -1,12 +1,12 @@
-#ifndef CDSP_OSCILLATOR_TABLE_OSCILLATOR
-#define CDSP_OSCILLATOR_TABLE_OSCILLATOR
+#ifndef CDSP_PRIMITIVES_OSCILLATORS_TABLE_INTERPOLATE_4
+#define CDSP_PRIMITIVES_OSCILLATORS_TABLE_INTERPOLATE_4
 
 #include <math.h>
 
 #include "../../helpers.hpp"
 #include "../primitive_base.hpp"
 
-namespace cdsp { namespace primitive { namespace oscillator {
+namespace cdsp { namespace primitives { namespace oscillators {
 	class table_interpolate_4 : public primitive::base {
 	public:
 		table_interpolate_4();

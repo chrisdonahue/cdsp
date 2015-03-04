@@ -6,6 +6,6 @@
 #include "types.hpp"
 #include "values.hpp"
 
-#include "primitive/oscillator/table_interpolate_4.hpp"
+#include "primitives/oscillators/table_interpolate_4.hpp"
 
 #endif

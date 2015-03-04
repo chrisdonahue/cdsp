@@ -1,6 +1,6 @@
 #include "table_interpolate_4.hpp"
 
-cdsp::primitive::oscillator::table_interpolate_4::table_interpolate_4() :
+cdsp::primitives::oscillators::table_interpolate_4::table_interpolate_4() :
 	primitive::base(),
 	phase(0.0),
 	frequency(static_cast<types::sample>(0.01), static_cast<types::sample>(0.0), static_cast<types::sample>(1.0)),
@@ -16,10 +16,10 @@ cdsp::primitive::oscillator::table_interpolate_4::table_interpolate_4() :
 	parameter_plug_register("frequency");
 };
 
-void cdsp::primitive::oscillator::table_interpolate_4::table_set(types::disc_32_u _table_length, const types::cont_32* _table) {
+void cdsp::primitives::oscillators::table_interpolate_4::table_set(types::disc_32_u _table_length, const types::cont_32* _table) {
 #ifdef CDSP_DEBUG
 	if (!cdsp::helpers::is_power_of_two(_table_length)) {
-		throw cdsp::exceptions::runtime("cdsp::primitive::oscillator::table_interpolate_4: table_set called with a table_size that was not a power of two");
+		throw cdsp::exceptions::runtime("cdsp::primitives::oscillators::table_interpolate_4: table_set called with a table_size that was not a power of two");
 	}
 #endif
 
@@ -28,19 +28,19 @@ void cdsp::primitive::oscillator::table_interpolate_4::table_set(types::disc_32_
 	table = _table;
 };
 
-void cdsp::primitive::oscillator::table_interpolate_4::prepare(types::cont_64 _sample_rate, types::disc_32_u _block_size) {
+void cdsp::primitives::oscillators::table_interpolate_4::prepare(types::cont_64 _sample_rate, types::disc_32_u _block_size) {
 	primitive::base::prepare(_sample_rate, _block_size);
 
 	frequency.prepare(_sample_rate, _block_size);
 }
 
-void cdsp::primitive::oscillator::table_interpolate_4::perform(sample_buffer& buffer, types::disc_32_u block_size_leq, types::channel offset_channel, types::disc_32_u offset_sample) {
+void cdsp::primitives::oscillators::table_interpolate_4::perform(sample_buffer& buffer, types::disc_32_u block_size_leq, types::channel offset_channel, types::disc_32_u offset_sample) {
 	primitive::base::perform(buffer, block_size_leq, offset_channel, offset_sample);
 
 	// check to make sure we have a table to interpolate
 #ifdef CDSP_DEBUG_DSP
 	if (table == nullptr) {
-		throw cdsp::exceptions::runtime("cdsp::primitive::oscillator::table_interpolate_4: perform called before set_table");
+		throw cdsp::exceptions::runtime("cdsp::primitives::oscillators::table_interpolate_4: perform called before set_table");
 	}
 #endif
 
@@ -109,18 +109,18 @@ void cdsp::primitive::oscillator::table_interpolate_4::perform(sample_buffer& bu
 	}
 };
 
-void cdsp::primitive::oscillator::table_interpolate_4::phase_set(types::cont_64 _phase) {
+void cdsp::primitives::oscillators::table_interpolate_4::phase_set(types::cont_64 _phase) {
 	phase = _phase;
 }
 
-void cdsp::primitive::oscillator::table_interpolate_4::frequency_set(types::sample _frequency) {
+void cdsp::primitives::oscillators::table_interpolate_4::frequency_set(types::sample _frequency) {
 	frequency.value_set(_frequency);
 }
 
-void cdsp::primitive::oscillator::table_interpolate_4::frequency_next_set(types::sample frequency_next) {
+void cdsp::primitives::oscillators::table_interpolate_4::frequency_next_set(types::sample frequency_next) {
 	frequency.value_next_set(frequency_next);
 }
 
-void cdsp::primitive::oscillator::table_interpolate_4::frequency_next_set(types::sample frequency_next, types::cont_64 delay_s) {
+void cdsp::primitives::oscillators::table_interpolate_4::frequency_next_set(types::sample frequency_next, types::cont_64 delay_s) {
 	frequency.value_next_set(frequency_next, delay_s);
 }
