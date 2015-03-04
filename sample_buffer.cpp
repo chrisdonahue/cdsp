@@ -21,8 +21,14 @@ cdsp::sample_buffer::~sample_buffer() {
 }
 
 void cdsp::sample_buffer::buffer_reallocate() {
+	types::disc_32_u buffer_length_old = buffer_length;
 	buffer_length = channels_num * channel_buffer_length;
-	buffer = reinterpret_cast<types::sample*>(malloc(sizeof(types::sample) * buffer_length));
+	if (buffer_length > buffer_length_old) {
+		if (buffer != nullptr) {
+			free(buffer);
+		}
+		buffer = reinterpret_cast<types::sample*>(malloc(sizeof(types::sample) * buffer_length));
+	}
 }
 
 void cdsp::sample_buffer::buffer_free() {
@@ -36,7 +42,6 @@ void cdsp::sample_buffer::buffer_free() {
 }
 
 void cdsp::sample_buffer::resize(types::channel _channels_num, types::disc_32_u _channel_buffer_length) {
-	buffer_free();
 	channels_num = _channels_num;
 	channel_buffer_length = _channel_buffer_length;
 	if (!(channels_num & channel_buffer_length)) {
@@ -61,11 +66,11 @@ cdsp::types::size cdsp::sample_buffer::buffer_size_get() {
 }
 
 const cdsp::types::sample* cdsp::sample_buffer::channel_pointer_read(types::channel channel, types::disc_32_u offset) const {
-	return const_cast<types::sample*>(buffer + (channel * buffer_length) + offset);
+	return const_cast<types::sample*>(buffer + (channel * channel_buffer_length) + offset);
 }
 
 cdsp::types::sample* cdsp::sample_buffer::channel_pointer_write(types::channel channel, types::disc_32_u offset) {
-	return buffer + (channel * buffer_length) + offset;
+	return buffer + (channel * channel_buffer_length) + offset;
 }
 
 void cdsp::sample_buffer::channel_clear(types::channel channel) {

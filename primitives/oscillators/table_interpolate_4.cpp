@@ -43,7 +43,7 @@ void cdsp::primitives::oscillators::table_interpolate_4::perform(sample_buffer& 
 	const types::sample* frequency_buffer;
 	if ((frequency_plug = parameter_plug_get("frequency")) == nullptr) {
 		frequency.perform(buffer, block_size_leq, offset_channel, offset_sample);
-		frequency_buffer = buffer.channel_pointer_read(0, offset_sample);
+		frequency_buffer = buffer.channel_pointer_read(offset_channel, offset_sample);
 	}
 	else {
 		types::channel frequency_plug_channel = frequency_plug->channel_get();
@@ -51,7 +51,7 @@ void cdsp::primitives::oscillators::table_interpolate_4::perform(sample_buffer& 
 		frequency_buffer = buffer.channel_pointer_read(frequency_plug_channel, offset_sample);
 	}
 
-	// create temporaries
+	// create state
 	types::sample frequency_current;
 	types::sample phase_increment;
 	types::disc_32_u phase_truncated;

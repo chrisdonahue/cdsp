@@ -6,7 +6,9 @@
 namespace cdsp { namespace primitives { namespace operators {
 	class add : public base {
 	public:
-		using base::base;
+		add::add() : base() {};
+		add::add(types::channel operands_num) : base(operands_num) {};
+		add::add(types::sample operand) : base(operand) {};
 
 		void perform(sample_buffer& buffer, types::disc_32_u block_size_leq, types::channel offset_channel = 0, types::disc_32_u offset_sample = 0);
 	};
