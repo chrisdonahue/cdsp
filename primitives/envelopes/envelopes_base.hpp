@@ -1,14 +1,15 @@
-#ifndef CDSP_PRIMITIVES_OPERATORS_BASE
-#define CDSP_PRIMITIVES_OPERATORS_BASE
+#ifndef CDSP_PRIMITIVES_ENVELOPES_BASE
+#define CDSP_PRIMITIVES_ENVELOPES_BASE
 
-#include <tuple>
+#include <utility>
 #include <vector>
 
 #include "../primitives_base.hpp"
 
 namespace cdsp { namespace primitives { namespace envelopes {
 	class base : public primitives::base {
-		typedef std::tuple<types::sample value, types::cont_64 length_s> point;
+	protected:
+		typedef std::pair<types::sample, types::cont_64> point;
 
 	public:
 		base();

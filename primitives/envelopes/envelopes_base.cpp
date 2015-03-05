@@ -29,5 +29,9 @@ cdsp::primitives::envelopes::base::base(types::sample _value_initial, std::vecto
 };
 
 void cdsp::primitives::envelopes::base::point_add(types::cont_64 length_s, types::sample value) {
-	points.push_back(std::make_tuple(length_s, value));
+	points.push_back(std::make_pair(length_s, value));
+};
+
+void cdsp::primitives::envelopes::base::perform(sample_buffer& buffer, types::disc_32_u block_size_leq, types::channel offset_channel, types::disc_32_u offset_sample) {
+	primitives::base::perform(buffer, block_size_leq, offset_channel, offset_sample);
 };
