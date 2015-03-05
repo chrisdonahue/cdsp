@@ -1,17 +1,26 @@
 #include "interpolate_linear.hpp"
 
 cdsp::primitives::envelopes::interpolate_linear::interpolate_linear() :
-	base()
+	base(),
+	points_increments(),
+	point_samples_remaining(0),
+	point_increment_current(values::sample_zero)
 {
 };
 
 cdsp::primitives::envelopes::interpolate_linear::interpolate_linear(types::sample _value_initial) :
-	base(_value_initial)
+	base(_value_initial),
+	points_increments(),
+	point_samples_remaining(0),
+	point_increment_current(values::sample_zero)
 {
 };
 
 cdsp::primitives::envelopes::interpolate_linear::interpolate_linear(types::sample _value_initial, std::vector<point>& _points) :
-	base(_value_initial, _points)
+	base(_value_initial, _points),
+	points_increments(),
+	point_samples_remaining(0),
+	point_increment_current(values::sample_zero)
 {
 };
 
@@ -66,6 +75,8 @@ void cdsp::primitives::envelopes::interpolate_linear::point_add(types::cont_64 d
 	types::sample point_increment;
 	if (points_size == 1) {
 		point_increment = (value - value_initial)/static_cast<types::sample>(point_length);
+		point_samples_remaining = point_length;
+		point_increment_current = point_increment;
 	}
 	else {
 		point_increment = (value - points.at(points_size - 2).second) / static_cast<types::sample>(point_length);

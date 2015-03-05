@@ -40,6 +40,9 @@ namespace cdsp { namespace values {
 	const types::channel channel_zero			= static_cast<types::channel>(0);
 	const types::channel channel_max	 		= std::numeric_limits<types::channel>::max();
 
+	// index
+	const types::index index_zero				= static_cast<types::index>(0);
+
 #ifdef CDSP_SAMPLE_32
 	const types::sample sample_zero				= static_cast<types::sample>(0.0f);
 	const types::sample sample_one				= static_cast<types::sample>(1.0f);
