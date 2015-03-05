@@ -1,7 +1,12 @@
 #include "envelopes_base.hpp"
 
 cdsp::primitives::envelopes::base::base() :
-	primitives::base()
+	primitives::base(),
+	value(_value_initial),
+	value_initial(_value_initial),
+	value_increment(values::sample_zero),
+	points(),
+	points_index_current(0)
 {
 	channels_input_num_set(0);
 	channels_output_num_set(1);
@@ -11,7 +16,9 @@ cdsp::primitives::envelopes::base::base(types::sample _value_initial) :
 	primitives::base(),
 	value(_value_initial),
 	value_initial(_value_initial),
-	value_increment(values::sample_zero)
+	value_increment(values::sample_zero),
+	points(),
+	points_index_current(0)
 {
 	channels_input_num_set(0);
 	channels_output_num_set(1);
@@ -22,10 +29,15 @@ cdsp::primitives::envelopes::base::base(types::sample _value_initial, std::vecto
 	value(_value_initial),
 	value_initial(_value_initial),
 	value_increment(values::sample_zero),
-	points(_points)
+	points(),
+	points_index_current(0)
 {
 	channels_input_num_set(0);
 	channels_output_num_set(1);
+
+	for (auto it : points) {
+		point_add(it.first(), it.second());
+	}
 };
 
 void cdsp::primitives::envelopes::base::point_add(types::cont_64 length_s, types::sample value) {

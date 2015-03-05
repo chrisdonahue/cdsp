@@ -26,6 +26,7 @@ namespace cdsp { namespace primitives { namespace envelopes {
 		types::sample value_initial;
 		types::sample value_increment;
 		std::vector<point> points;
+		types::disc_32_u points_index_current;
 	};
 }}}
 
