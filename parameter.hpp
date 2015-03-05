@@ -199,7 +199,7 @@ namespace cdsp { namespace parameter {
 		ramp_linear_automatic(types::sample value_min, types::sample value_max) : ramp_linear(value_min, value_max) {};
 		ramp_linear_automatic(types::sample value_initial, types::sample value_min, types::sample value_max) : ramp_linear(value_initial, value_min, value_max) {};
 
-		void prepare(types::cont_64 _sample_rate, types::disc_32_u _block_size) {
+		void prepare(types::cont_64 _sample_rate, types::index _block_size) {
 			ramp_linear::prepare(_sample_rate, _block_size);
 			buffer.resize(1, _block_size);
 			dezipper_buffer = buffer.channel_pointer_write(0);

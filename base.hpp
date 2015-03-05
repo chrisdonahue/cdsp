@@ -25,7 +25,7 @@ namespace cdsp {
 #endif
 		};
 
-		virtual void prepare(types::cont_64 _sample_rate, types::disc_32_u _block_size) {
+		virtual void prepare(types::cont_64 _sample_rate, types::index _block_size) {
 			sample_rate = _sample_rate;
 			sample_rate_inverse = values::one_64 / sample_rate;
 			block_size = _block_size;

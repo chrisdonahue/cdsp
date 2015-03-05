@@ -21,7 +21,7 @@ namespace cdsp { namespace primitives {
 		};
 
 		// dsp
-		virtual void prepare(types::cont_64 _sample_rate, types::disc_32_u _block_size) {
+		virtual void prepare(types::cont_64 _sample_rate, types::index _block_size) {
 			dsp::prepare(_sample_rate, _block_size);
 			for (auto it : parameter_plugs) {
 				(it.second)->prepare(_sample_rate, _block_size);

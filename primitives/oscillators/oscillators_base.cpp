@@ -24,7 +24,7 @@ cdsp::primitives::oscillators::base::base(types::sample _phase, types::sample _f
 	parameter_plug_register("frequency");
 }
 
-void cdsp::primitives::oscillators::base::prepare(types::cont_64 _sample_rate, types::disc_32_u _block_size) {
+void cdsp::primitives::oscillators::base::prepare(types::cont_64 _sample_rate, types::index _block_size) {
 	primitives::base::prepare(_sample_rate, _block_size);
 
 	frequency.prepare(_sample_rate, _block_size);
