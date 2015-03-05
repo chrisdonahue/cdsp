@@ -28,8 +28,13 @@ namespace cdsp { namespace values {
 	const types::cont_64 infinity_64			= std::numeric_limits<types::cont_64>::infinity();
 
 	// nan
+#ifdef CDSP_DEBUG_DSP
 	const types::cont_32 nan_32					= std::numeric_limits<types::cont_32>::signaling_NaN();
 	const types::cont_64 nan_64					= std::numeric_limits<types::cont_64>::signaling_NaN();
+#else
+	const types::cont_32 nan_32					= std::numeric_limits<types::cont_32>::quiet_NaN();
+	const types::cont_64 nan_64					= std::numeric_limits<types::cont_64>::quiet_NaN();
+#endif
 
 	// channels
 	const types::channel channel_zero			= static_cast<types::channel>(0);

@@ -9,7 +9,7 @@
 namespace cdsp { namespace primitives { namespace envelopes {
 	class base : public primitives::base {
 	protected:
-		typedef std::pair<types::sample, types::cont_64> point;
+		typedef std::pair<types::cont_64, types::sample> point;
 
 	public:
 		base();
@@ -24,7 +24,6 @@ namespace cdsp { namespace primitives { namespace envelopes {
 		types::sample value;
 
 		types::sample value_initial;
-		types::sample value_increment;
 		std::vector<point> points;
 		types::disc_32_u points_index_current;
 	};

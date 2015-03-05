@@ -17,6 +17,37 @@ cdsp::primitives::envelopes::interpolate_linear::interpolate_linear(types::sampl
 
 void cdsp::primitives::envelopes::interpolate_linear::perform(sample_buffer& buffer, types::disc_32_u block_size_leq, types::channel offset_channel, types::disc_32_u offset_sample) {
 	base::perform(buffer, block_size_leq, offset_channel, offset_sample);
+
+	types::sample* output = buffer.channel_pointer_write(offset_channel, offset_sample);
+	types::index samples_remaining = block_size_leq;
+
+	// holding
+	if (points_index_current >= points.size()) {
+		while (samples_remaining--) {
+			*(output++) = value;
+		}
+	}
+	// ramping
+	else {
+		while (samples_remaining--) {
+			if (point_samples_remaining <= 0) {
+				value = points.at(points_index_current).second;
+				points_index_current += 1;
+				if (points_index_current == points.size()) {
+					point_samples_remaining = 0;
+					point_increment_current = values::sample_zero;
+				}
+				else {
+					point_samples_remaining = points_increments.at(points_index_current).first;
+					point_increment_current = points_increments.at(points_index_current).second;
+				}
+			}
+
+			*(output++) = value;
+			value += point_increment_current;
+			point_samples_remaining--;
+		}
+	}
 };
 
 void cdsp::primitives::envelopes::interpolate_linear::point_add(types::cont_64 delay_s, types::sample value) {
@@ -37,7 +68,7 @@ void cdsp::primitives::envelopes::interpolate_linear::point_add(types::cont_64 d
 		point_increment = (value - value_initial)/static_cast<types::sample>(point_length);
 	}
 	else {
-		point_increment = (value - points[points_size - 2].second())/static_cast<types::sample>(point_length);
+		point_increment = (value - points.at(points_size - 2).second) / static_cast<types::sample>(point_length);
 	}
 
 	// add point increment

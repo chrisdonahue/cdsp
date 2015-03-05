@@ -10,5 +10,6 @@
 #include "primitives/operators/multiply.hpp"
 #include "primitives/oscillators/phasor.hpp"
 #include "primitives/oscillators/table_interpolate_4.hpp"
+#include "primitives/envelopes/interpolate_linear.hpp"
 
 #endif

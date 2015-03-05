@@ -10,21 +10,21 @@ namespace cdsp {
 	class sample_buffer {
 	public:
 		sample_buffer();
-		sample_buffer(types::channel channels_num, types::disc_32_u channel_buffer_length);
+		sample_buffer(types::channel channels_num, types::index channel_buffer_length);
 		~sample_buffer();
 
 		// resize
-		void resize(types::channel _channels_num, types::disc_32_u _channel_buffer_length);
+		void resize(types::channel _channels_num, types::index _channel_buffer_length);
 
 		// meta data accessors
 		types::channel channels_num_get();
-		types::disc_32_u channel_buffer_length_get();
-		types::disc_32_u buffer_length_get();
+		types::index channel_buffer_length_get();
+		types::index buffer_length_get();
 		types::size buffer_size_get();
 
 		// read/write pointer accessors
-		const types::sample* channel_pointer_read(types::channel channel, types::disc_32_u offset = 0) const;
-		types::sample* channel_pointer_write(types::channel channel, types::disc_32_u offset = 0);
+		const types::sample* channel_pointer_read(types::channel channel, types::index offset = 0) const;
+		types::sample* channel_pointer_write(types::channel channel, types::index offset = 0);
 
 		// clear
 		void channel_clear(types::channel channel);
@@ -49,8 +49,8 @@ namespace cdsp {
 		void buffer_free();
 
 		types::channel channels_num;
-		types::disc_32_u channel_buffer_length;
-		types::disc_32_u buffer_length;
+		types::index channel_buffer_length;
+		types::index buffer_length;
 		types::sample* buffer;
 	};
 }
