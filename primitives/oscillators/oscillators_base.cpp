@@ -46,6 +46,6 @@ void cdsp::primitives::oscillators::base::frequency_next_set(types::sample frequ
 	frequency.value_next_set(frequency_next, delay_s);
 }
 
-void cdsp::primitives::oscillators::base::perform(sample_buffer& buffer, types::disc_32_u block_size_leq, types::channel offset_channel, types::disc_32_u offset_sample) {
+void cdsp::primitives::oscillators::base::perform(sample_buffer& buffer, types::disc_32_u block_size_leq, types::channel offset_channel, types::index offset_sample) {
 	primitives::base::perform(buffer, block_size_leq, offset_channel, offset_sample);
 };

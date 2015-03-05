@@ -12,7 +12,7 @@ namespace cdsp { namespace primitives { namespace oscillators {
 
 		void table_set(types::disc_32_u _table_length, const types::sample* _table);
 
-		void perform(sample_buffer& buffer, types::disc_32_u block_size_leq, types::channel offset_channel = 0, types::disc_32_u offset_sample = 0);
+		void perform(sample_buffer& buffer, types::disc_32_u block_size_leq, types::channel offset_channel = 0, types::index offset_sample = 0);
 
 	private:
 		types::sample table_length;

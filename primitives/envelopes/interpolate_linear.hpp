@@ -10,7 +10,7 @@ namespace cdsp { namespace primitives { namespace envelopes {
 		interpolate_linear(types::sample _value_initial);
 		interpolate_linear(types::sample _value_initial, std::vector<point>& _points);
 
-		void perform(sample_buffer& buffer, types::disc_32_u block_size_leq, types::channel offset_channel = 0, types::disc_32_u offset_sample = 0);
+		void perform(sample_buffer& buffer, types::disc_32_u block_size_leq, types::channel offset_channel = 0, types::index offset_sample = 0);
 	
 		void point_add(types::cont_64 delay_s, types::sample value);
 

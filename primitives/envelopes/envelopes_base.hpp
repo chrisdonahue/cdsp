@@ -16,7 +16,7 @@ namespace cdsp { namespace primitives { namespace envelopes {
 		base(types::sample _value_initial);
 		base(types::sample _value_initial, std::vector<point>& _points);
 
-		virtual void perform(sample_buffer& buffer, types::disc_32_u block_size_leq, types::channel offset_channel = 0, types::disc_32_u offset_sample = 0) = 0;
+		virtual void perform(sample_buffer& buffer, types::disc_32_u block_size_leq, types::channel offset_channel = 0, types::index offset_sample = 0) = 0;
 
 		void point_add(types::cont_64 delay_s, types::sample value);
 

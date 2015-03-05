@@ -1,6 +1,6 @@
 #include "add.hpp"
 
-void cdsp::primitives::operators::add::perform(sample_buffer& buffer, types::disc_32_u block_size_leq, types::channel offset_channel, types::disc_32_u offset_sample) {
+void cdsp::primitives::operators::add::perform(sample_buffer& buffer, types::disc_32_u block_size_leq, types::channel offset_channel, types::index offset_sample) {
 	base::perform(buffer, block_size_leq, offset_channel, offset_sample);
 
 	types::sample* output = buffer.channel_pointer_write(offset_channel, offset_sample);

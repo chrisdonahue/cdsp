@@ -10,7 +10,7 @@ base(_phase, _frequency)
 {
 };
 
-void cdsp::primitives::oscillators::phasor::perform(sample_buffer& buffer, types::disc_32_u block_size_leq, types::channel offset_channel, types::disc_32_u offset_sample) {
+void cdsp::primitives::oscillators::phasor::perform(sample_buffer& buffer, types::disc_32_u block_size_leq, types::channel offset_channel, types::index offset_sample) {
 	base::perform(buffer, block_size_leq, offset_channel, offset_sample);
 
 	// get parameter values

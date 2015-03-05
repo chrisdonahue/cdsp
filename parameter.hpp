@@ -111,7 +111,7 @@ namespace cdsp { namespace parameter {
 		ramp_linear(types::sample value_min, types::sample value_max) : rate_audio(value_min, value_max), value_next(value), dezipper_samples_num(0), dezipper_increment(values::sample_silence) {};
 		ramp_linear(types::sample value_initial, types::sample value_min, types::sample value_max) : rate_audio(value_initial, value_min, value_max), value_next(value), dezipper_samples_num(0), dezipper_increment(values::sample_silence) {};
 
-		void perform(sample_buffer& buffer, types::disc_32_u block_size_leq, types::channel offset_channel = 0, types::disc_32_u offset_sample = 0) {
+		void perform(sample_buffer& buffer, types::disc_32_u block_size_leq, types::channel offset_channel = 0, types::index offset_sample = 0) {
 			rate_audio::perform(buffer, block_size_leq, offset_channel, offset_sample);
 		};
 
@@ -210,7 +210,7 @@ namespace cdsp { namespace parameter {
 			buffer.resize(0, 0);
 		};
 
-		void perform(sample_buffer& buffer, types::disc_32_u block_size_leq, types::channel offset_channel = 0, types::disc_32_u offset_sample = 0) {
+		void perform(sample_buffer& buffer, types::disc_32_u block_size_leq, types::channel offset_channel = 0, types::index offset_sample = 0) {
 			ramp_linear::perform(buffer, block_size_leq, offset_channel, offset_sample);
 
 			types::sample* buffer_output = buffer.channel_pointer_write(offset_channel, offset_sample);
@@ -264,7 +264,7 @@ namespace cdsp { namespace parameter {
 			}
 		};
 
-		void perform(sample_buffer& buffer, types::disc_32_u block_size_leq, types::channel offset_channel = 0, types::disc_32_u offset_sample = 0) {
+		void perform(sample_buffer& buffer, types::disc_32_u block_size_leq, types::channel offset_channel = 0, types::index offset_sample = 0) {
 			rate_audio::perform(buffer, block_size_leq, offset_channel, offset_sample);
 
 			if (range_map) {

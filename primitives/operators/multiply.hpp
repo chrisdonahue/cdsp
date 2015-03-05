@@ -12,7 +12,7 @@ namespace cdsp {
 				multiply(types::channel operands_num) : base(operands_num) {};
 				multiply(types::sample operand) : base(operand) {};
 
-				void perform(sample_buffer& buffer, types::disc_32_u block_size_leq, types::channel offset_channel = 0, types::disc_32_u offset_sample = 0);
+				void perform(sample_buffer& buffer, types::disc_32_u block_size_leq, types::channel offset_channel = 0, types::index offset_sample = 0);
 			};
 		}
 	}

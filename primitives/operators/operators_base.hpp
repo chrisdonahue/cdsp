@@ -16,7 +16,7 @@ namespace cdsp { namespace primitives { namespace operators {
 		void operand_next_set(types::sample operand_next);
 		void operand_next_set(types::sample operand_next, types::cont_64 delay_s);
 
-		virtual void perform(sample_buffer& buffer, types::disc_32_u block_size_leq, types::channel offset_channel = 0, types::disc_32_u offset_sample = 0) = 0;
+		virtual void perform(sample_buffer& buffer, types::disc_32_u block_size_leq, types::channel offset_channel = 0, types::index offset_sample = 0) = 0;
 
 	protected:
 		types::boolean operand_use;

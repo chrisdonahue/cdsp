@@ -12,7 +12,7 @@ namespace cdsp {
 				base(types::sample _phase, types::sample _frequency);
 
 				void prepare(types::cont_64 _sample_rate, types::disc_32_u _block_size);
-				virtual void perform(sample_buffer& buffer, types::disc_32_u block_size_leq, types::channel offset_channel = 0, types::disc_32_u offset_sample = 0) = 0;
+				virtual void perform(sample_buffer& buffer, types::disc_32_u block_size_leq, types::channel offset_channel = 0, types::index offset_sample = 0) = 0;
 
 				void phase_set(types::sample _phase);
 

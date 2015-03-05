@@ -39,7 +39,7 @@ namespace cdsp {
 			prepared = false;
 #endif
 		};
-		virtual void perform(sample_buffer& buffer, types::disc_32_u block_size_leq, types::channel offset_channel = 0, types::disc_32_u offset_sample = 0) = 0;
+		virtual void perform(sample_buffer& buffer, types::disc_32_u block_size_leq, types::channel offset_channel = 0, types::index offset_sample = 0) = 0;
 
 	protected:
 		types::cont_64 sample_rate;

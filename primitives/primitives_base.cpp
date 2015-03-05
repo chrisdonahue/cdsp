@@ -1,6 +1,6 @@
 #include "primitives_base.hpp"
 
-void cdsp::primitives::base::perform(sample_buffer& buffer, types::disc_32_u block_size_leq, types::channel offset_channel, types::disc_32_u offset_sample) {
+void cdsp::primitives::base::perform(sample_buffer& buffer, types::disc_32_u block_size_leq, types::channel offset_channel, types::index offset_sample) {
 	dsp::perform(buffer, block_size_leq, offset_channel, offset_sample);
 
 #ifdef CDSP_DEBUG_DSP

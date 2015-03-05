@@ -9,7 +9,7 @@ namespace cdsp { namespace primitives { namespace envelopes {
 		adsr();
 		adsr(types::sample _atk, types::sample _dcy, types::sample _sus, types::sample _rel);
 
-		void perform(sample_buffer& buffer, types::disc_32_u block_size_leq, types::channel offset_channel = 0, types::disc_32_u offset_sample = 0);
+		void perform(sample_buffer& buffer, types::disc_32_u block_size_leq, types::channel offset_channel = 0, types::index offset_sample = 0);
 
 		void atk_set(types::sample _atk);
 		void dcy_set(types::sample _dcy);
