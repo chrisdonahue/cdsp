@@ -29,7 +29,7 @@ void cdsp::primitives::oscillators::table_interpolate_4::table_set(types::disc_3
 };
 
 void cdsp::primitives::oscillators::table_interpolate_4::perform(sample_buffer& buffer, types::disc_32_u block_size_leq, types::channel offset_channel, types::disc_32_u offset_sample) {
-	primitives::base::perform(buffer, block_size_leq, offset_channel, offset_sample);
+	base::perform(buffer, block_size_leq, offset_channel, offset_sample);
 
 	// check to make sure we have a table to interpolate
 #ifdef CDSP_DEBUG_DSP

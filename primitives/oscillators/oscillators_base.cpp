@@ -28,12 +28,6 @@ void cdsp::primitives::oscillators::base::prepare(types::cont_64 _sample_rate, t
 	primitives::base::prepare(_sample_rate, _block_size);
 
 	frequency.prepare(_sample_rate, _block_size);
-
-#ifdef CDSP_MEMORY_HIGH
-	sample_rate_inverse = static_cast<types::sample>(helpers::inverse_memoized(_sample_rate));
-#else
-	sample_rate_inverse = static_cast<types::sample>(1.0 / ramp_length_samples);
-#endif
 }
 
 void cdsp::primitives::oscillators::base::phase_set(types::sample _phase) {

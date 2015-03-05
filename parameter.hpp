@@ -107,19 +107,9 @@ namespace cdsp { namespace parameter {
 	class ramp_linear : public rate_audio {
 	public:
 		ramp_linear(): rate_audio() {};
-		ramp_linear(types::sample value_initial) : rate_audio(value_initial), block_size_inverse(values::nan_64), value_next(value), dezipper_samples_num(0), dezipper_increment(values::sample_silence) {};
-		ramp_linear(types::sample value_min, types::sample value_max) : rate_audio(value_min, value_max), block_size_inverse(values::nan_64), value_next(value), dezipper_samples_num(0), dezipper_increment(values::sample_silence) {};
-		ramp_linear(types::sample value_initial, types::sample value_min, types::sample value_max) : rate_audio(value_initial, value_min, value_max), block_size_inverse(values::nan_64), value_next(value), dezipper_samples_num(0), dezipper_increment(values::sample_silence) {};
-
-		void prepare(types::cont_64 _sample_rate, types::disc_32_u _block_size) {
-			rate_audio::prepare(_sample_rate, _block_size);
-			types::cont_64 block_size = static_cast<types::cont_64>(_block_size);
-#ifdef CDSP_MEMORY_HIGH
-			block_size_inverse = helpers::inverse_memoized(block_size);
-#else
-			block_size_inverse = 1.0 / block_size;
-#endif
-		};
+		ramp_linear(types::sample value_initial) : rate_audio(value_initial), value_next(value), dezipper_samples_num(0), dezipper_increment(values::sample_silence) {};
+		ramp_linear(types::sample value_min, types::sample value_max) : rate_audio(value_min, value_max), value_next(value), dezipper_samples_num(0), dezipper_increment(values::sample_silence) {};
+		ramp_linear(types::sample value_initial, types::sample value_min, types::sample value_max) : rate_audio(value_initial, value_min, value_max), value_next(value), dezipper_samples_num(0), dezipper_increment(values::sample_silence) {};
 
 		void perform(sample_buffer& buffer, types::disc_32_u block_size_leq, types::channel offset_channel = 0, types::disc_32_u offset_sample = 0) {
 			rate_audio::perform(buffer, block_size_leq, offset_channel, offset_sample);
@@ -148,11 +138,7 @@ namespace cdsp { namespace parameter {
 			value_next = _value_next;
 			types::cont_64 value_difference = static_cast<types::cont_64>(value_next - value);
 			types::cont_64 ramp_length_samples = sample_rate * delay_s;
-#ifdef CDSP_MEMORY_HIGH
-			types::cont_64 inverse = helpers::inverse_memoized(ramp_length_samples);
-#else
-			types::cont_64 inverse = 1.0 / ramp_length_samples;
-#endif
+			types::cont_64 inverse = values::one_64 / ramp_length_samples;
 			dezipper_samples_num = static_cast<types::disc_32_u>(ramp_length_samples);
 			dezipper_increment = static_cast<types::sample>(inverse * value_difference);
 		};
@@ -183,8 +169,6 @@ namespace cdsp { namespace parameter {
 				dezipper_increment = values::sample_silence;
 			}
 		};
-
-		types::cont_64 block_size_inverse;
 
 		types::sample value_next;
 

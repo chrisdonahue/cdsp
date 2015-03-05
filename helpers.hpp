@@ -34,12 +34,6 @@ namespace cdsp { namespace helpers {
 		b = (y - (w * m));
 	};
 
-	// memoized divide
-#ifdef CDSP_MEMORY_HIGH
-	static std::unordered_map<types::cont_64, types::cont_32> inverse_memoize;
-	extern types::cont_32 inverse_memoized(types::cont_64 x);
-#endif
-
 	namespace io {
 		extern void wav_file_save(std::string file_path, types::cont_64 sample_rate, types::disc_32_u sample_bit_depth, sample_buffer& sample_buffer);
 	}

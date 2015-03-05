@@ -67,19 +67,6 @@ void cdsp::helpers::generators::cosine(types::disc_32_u buffer_length, types::sa
 	sinusoid(buffer_length, buffer, values::one_64, values::one_64, values::zero_64);
 }
 
-cdsp::types::cont_32 cdsp::helpers::inverse_memoized(types::cont_64 x) {
-	auto it = inverse_memoize.find(x);
-	types::cont_32 result;
-	if (it == inverse_memoize.end()) {
-		result = static_cast<types::cont_32>(1.0 / x);
-		inverse_memoize.insert(std::make_pair(x, result));
-	}
-	else {
-		result = it->second;
-	}
-	return result;
-}
-
 template <typename T>
 void write(std::ofstream& stream, const T& t) {
 	stream.write((const char*)&t, sizeof(T));

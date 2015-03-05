@@ -21,8 +21,6 @@ namespace cdsp {
 				void frequency_next_set(types::sample frequency_next, types::cont_64 delay_s);
 
 			protected:
-				types::sample sample_rate_inverse;
-
 				types::sample phase;
 
 				parameter::ramp_linear_automatic frequency;
