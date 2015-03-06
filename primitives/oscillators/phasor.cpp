@@ -56,8 +56,8 @@ void cdsp::primitives::oscillators::phasor::perform(sample_buffer& buffer, types
 		*(output++) = _phase;
 		_phase += phase_increment;
 
-		if (_phase > values::sample_one) {
-			_phase = values::sample_zero;
+		while (_phase > values::sample_one) {
+			_phase -= values::sample_one;
 		}
 	}
 

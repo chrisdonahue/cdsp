@@ -54,7 +54,7 @@ void cdsp::primitives::tables::phasor::interpolate_4::perform(sample_buffer& buf
 		phase = *(input++);
 
 		// make phase positive TODO: figure out UNITBIT32 stuff in d_osc.c
-		while (phase < 0) {
+		while (phase < values::sample_zero) {
 			phase += values::sample_one;
 		}
 
