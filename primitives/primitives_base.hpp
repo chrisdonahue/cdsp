@@ -45,7 +45,7 @@ namespace cdsp { namespace primitives {
 		};
 
 		// plugs
-		void parameter_plug(types::string parameter_specifier, parameter::signal* parameter_plug) {
+		void parameter_plug(types::string parameter_specifier, parameters::signal* parameter_plug) {
 			parameter_plugs.insert(std::make_pair(parameter_specifier, parameter_plug));
 		};
 
@@ -71,7 +71,7 @@ namespace cdsp { namespace primitives {
 			parameter_plug_specifiers.insert(parameter_specifier);
 		};
 
-		parameter::signal* parameter_plug_get(types::string parameter_specifier) {
+		parameters::signal* parameter_plug_get(types::string parameter_specifier) {
 			auto it = parameter_plugs.find(parameter_specifier);
 			if (it != parameter_plugs.end()) {
 				return it->second;
@@ -86,7 +86,7 @@ namespace cdsp { namespace primitives {
 		types::channel channels_output_num;
 
 		std::set<types::string> parameter_plug_specifiers;
-		std::unordered_map<types::string, parameter::signal*> parameter_plugs;
+		std::unordered_map<types::string, parameters::signal*> parameter_plugs;
 	};
 }}
 

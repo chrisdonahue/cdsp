@@ -46,8 +46,6 @@ namespace cdsp {
 		types::cont_64 sample_rate_inverse;
 		types::disc_32_u block_size;
 		types::cont_64 block_size_inverse;
-
-	private:
 #ifdef CDSP_DEBUG
 		types::boolean prepared;
 #endif

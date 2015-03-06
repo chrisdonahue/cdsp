@@ -5,118 +5,164 @@
 #include <unordered_map>
 
 #include "base.hpp"
+#include "exceptions.hpp"
 #include "helpers.hpp"
 #include "types.hpp"
 #include "values.hpp"
 
-namespace cdsp { namespace parameter {
+namespace cdsp { namespace parameters {
 	template <typename T>
 	class base {
 	public:
-		base() {
-			value_valid = false;
-			value_range_valid = false;
-		};
+		base() :
+			value_valid(values::boolean_false),
+			value_min_valid(values::boolean_false),
+			value_max_valid(values::boolean_false)
+		{};
 
-		base(T value_initial) {
-			value_valid = true;
-			value = value_initial;
-			value_range_valid = static_cast<types::boolean>(false);
-#ifdef CDSP_WIN32
-			__pragma(warning(push))
-				__pragma(warning(disable:4127))
-#endif
-				if (std::numeric_limits<T>::has_infinity) {
-					value_max = std::numeric_limits<T>::infinity();
-					value_min = static_cast<T>(-1.0) * value_max;
-				}
-				else {
-					value_max = std::numeric_limits<T>::min();
-					value_max = std::numeric_limits<T>::max();
-				}
-#ifdef CDSP_WIN32
-				__pragma(warning(pop))
-#endif
-		};
+		base(T _value) :
+			value(_value),
+			value_valid(values::boolean_true),
+			value_min_valid(values::boolean_false),
+			value_max_valid(values::boolean_false)
+		{};
 
-		base(T _value_min, T _value_max) {
-			value_valid = true;
-			value = (_value_min + _value_max) / static_cast<T>(2);
-			value_range_valid = static_cast<types::boolean>(true);
-			value_min = _value_min;
-			value_max = _value_max;
-		};
+		base(T _value_min, T _value_max) :
+			value_valid(values::boolean_false),
+			value_min(_value_min),
+			value_min_valid(values::boolean_true),
+			value_max(_value_max),
+			value_max_valid(values::boolean_true)
+		{};
 
-		base(T value_initial, T _value_min, T _value_max) {
-			value_valid = (value_initial >= _value_min) && (value_initial <= _value_max);
-			value = value_initial;
-			value_range_valid = static_cast<types::boolean>(true);
-			value_min = _value_min;
-			value_max = _value_max;
-		};
+		base(T _value, T _value_min, T _value_max) :
+			value(_value),
+			value_valid(values::boolean_true),
+			value_min(_value_min),
+			value_min_valid(values::boolean_true),
+			value_max(_value_max),
+			value_max_valid(values::boolean_true)
+		{};
+
+		// pure virtual destructor to declare class as abstract
+		virtual ~base() = 0 {};
 
 		types::boolean value_valid_get() {
 			return value_valid;
 		};
 
-		void value_valid_set(types::boolean _value_valid) {
-			value_valid = _value_valid;
-		};
-
 		T value_get() {
+#ifdef CDSP_DEBUG
+			if (!value_valid) {
+				// TODO: throw exception
+			}
+#endif
+
 			return value;
 		};
 
 		void value_set(T _value) {
 			value = _value;
+			value_valid = true;
+		};
+
+		types::boolean value_range_valid_get() {
+			return value_min_valid && value_max_valid;
 		};
 
 		T value_min_get() {
+#ifdef CDSP_DEBUG
+			if (!value_min_valid) {
+				// TODO: throw exception
+			}
+#endif
+
 			return value_min;
 		};
 
+		void value_min_set(T _value_min) {
+			value_min = _value_min;
+			value_min_valid = true;
+		};
+
 		T value_max_get() {
+#ifdef CDSP_DEBUG
+			if (!value_max_valid) {
+				// TODO: throw exception
+			}
+#endif
+
 			return value_max;
 		};
 
+		void value_max_set(T _value_max) {
+			value_max = _value_max;
+			value_max_valid = true;
+		};
+
+		void value_range_set(T _value_min, T _value_max) {
+			value_min = _value_min;
+			value_min_valid = true;
+			value_max = _value_max;
+			value_max_valid = true;
+		};
+
 	protected:
-		types::boolean value_valid;
 		T value;
-		types::boolean value_range_valid;
 		T value_min;
 		T value_max;
+
+	private:
+		types::boolean value_valid;
+		types::boolean value_min_valid;
+		types::boolean value_max_valid;
 	};
 
 	template <typename T>
-	class rate_block : public parameter::base<T> {
+	class rate_block : public parameters::base<T> {
 	public:
-		rate_block() : parameter::base<T>() {};
-		rate_block(T value_initial) : parameter::base<T>(value_initial) {};
-		rate_block(T value_min, T value_max) : parameter::base<T>(value_min, value_max) {};
-		rate_block(T value_initial, T value_min, T value_max) : parameter::base<T>(value_initial, value_min, value_max) {};
+		rate_block() : parameters::base<T>() {};
+		rate_block(T value_initial) : parameters::base<T>(value_initial) {};
+		rate_block(T value_min, T value_max) : parameters::base<T>(value_min, value_max) {};
+		rate_block(T value_initial, T value_min, T value_max) : parameters::base<T>(value_initial, value_min, value_max) {};
+		~rate_block() {};
 	};
 
 	class rate_audio : public base<types::sample>, public dsp {
 	public:
-		rate_audio() : parameter::base<types::sample>() {};
-		rate_audio(types::sample value_initial) : parameter::base<types::sample>(value_initial), dsp() {};
-		rate_audio(types::sample value_min, types::sample value_max) : parameter::base<types::sample>(value_min, value_max), dsp() {};
-		rate_audio(types::sample value_initial, types::sample value_min, types::sample value_max) : parameter::base<types::sample>(value_initial, value_min, value_max), dsp() {};
+		rate_audio() : parameters::base<types::sample>() {};
+		rate_audio(types::sample value_initial) : parameters::base<types::sample>(value_initial), dsp() {};
+		rate_audio(types::sample value_min, types::sample value_max) : parameters::base<types::sample>(value_min, value_max), dsp() {};
+		rate_audio(types::sample value_initial, types::sample value_min, types::sample value_max) : parameters::base<types::sample>(value_initial, value_min, value_max), dsp() {};
 	};
 
 	class ramp_linear : public rate_audio {
 	public:
-		ramp_linear(): rate_audio() {};
+		ramp_linear() : rate_audio() {};
 		ramp_linear(types::sample value_initial) : rate_audio(value_initial), value_next(value), dezipper_samples_num(0), dezipper_increment(values::sample_silence) {};
 		ramp_linear(types::sample value_min, types::sample value_max) : rate_audio(value_min, value_max), value_next(value), dezipper_samples_num(0), dezipper_increment(values::sample_silence) {};
 		ramp_linear(types::sample value_initial, types::sample value_min, types::sample value_max) : rate_audio(value_initial, value_min, value_max), value_next(value), dezipper_samples_num(0), dezipper_increment(values::sample_silence) {};
 
 		void perform(sample_buffer& buffer, types::disc_32_u block_size_leq, types::channel offset_channel = 0, types::index offset_sample = 0) {
 			rate_audio::perform(buffer, block_size_leq, offset_channel, offset_sample);
+
+#ifdef CDSP_DEBUG_DSP
+			if (value_range_valid_get()) {
+				types::index samples_remaining = block_size_leq;
+				const types::sample* samples = buffer.channel_pointer_read(offset_channel, offset_sample);
+				types::sample sample;
+				while (samples_remaining--) {
+					sample = *(samples++);
+					if (sample < value_min_get() || sample > value_max_get()) {
+						throw exceptions::runtime("cdsp::parameters::ramp_linear::perform: sample outside of specified range");
+					}
+				}
+			}
+#endif
 		};
 
 		void value_set(types::sample _value) {
-			value = _value;
+			rate_audio::value_set(_value);
 			value_next = _value;
 			dezipper_samples_num = 0;
 			dezipper_increment = values::sample_silence;
@@ -124,8 +170,12 @@ namespace cdsp { namespace parameter {
 
 		void value_next_set(types::sample _value_next, types::cont_64 delay_s) {
 #ifdef CDSP_DEBUG
+			if (!prepared) {
+				throw exceptions::runtime("cdsp::parameters::ramp_linear::value_next_set: value_next_set called before prepare");
+			}
+
 			if (delay_s <= values::zero_64) {
-				throw exceptions::runtime("cdsp::parameter::ramp_linear: value_next_set called with a negative delay_s");
+				throw exceptions::runtime("cdsp::parameters::ramp_linear: value_next_set called with a negative delay_s");
 			}
 			else if (delay_s == values::zero_64) {
 				return;
@@ -144,6 +194,12 @@ namespace cdsp { namespace parameter {
 		};
 
 		void value_next_set(types::sample _value_next) {
+#ifdef CDSP_DEBUG
+			if (!prepared) {
+				throw exceptions::runtime("cdsp::parameters::ramp_linear::value_next_set: value_next_set called before prepare");
+			}
+#endif
+
 			if (_value_next == value) {
 				return;
 			}
@@ -178,10 +234,11 @@ namespace cdsp { namespace parameter {
 
 	class ramp_linear_manual : public ramp_linear {
 	public:
-		ramp_linear_manual(): ramp_linear() {};
+		ramp_linear_manual() : ramp_linear() {};
 		ramp_linear_manual(types::sample value_initial) : ramp_linear(value_initial) {};
 		ramp_linear_manual(types::sample value_min, types::sample value_max) : ramp_linear(value_min, value_max) {};
 		ramp_linear_manual(types::sample value_initial, types::sample value_min, types::sample value_max) : ramp_linear(value_initial, value_min, value_max) {};
+		~ramp_linear_manual() {};
 
 		void value_dezipper_start(types::disc_32_u& _dezipper_samples_num, types::sample& _dezipper_increment) {
 			_value_dezipper_start(_dezipper_samples_num, _dezipper_increment);
@@ -194,10 +251,11 @@ namespace cdsp { namespace parameter {
 
 	class ramp_linear_automatic : public ramp_linear {
 	public:
-		ramp_linear_automatic(): ramp_linear() {};
+		ramp_linear_automatic() : ramp_linear() {};
 		ramp_linear_automatic(types::sample value_initial) : ramp_linear(value_initial) {};
 		ramp_linear_automatic(types::sample value_min, types::sample value_max) : ramp_linear(value_min, value_max) {};
 		ramp_linear_automatic(types::sample value_initial, types::sample value_min, types::sample value_max) : ramp_linear(value_initial, value_min, value_max) {};
+		~ramp_linear_automatic() {};
 
 		void prepare(types::cont_64 _sample_rate, types::index _block_size) {
 			ramp_linear::prepare(_sample_rate, _block_size);
@@ -263,6 +321,7 @@ namespace cdsp { namespace parameter {
 				helpers::range_map_linear(signal_min, signal_max, parameter_min, parameter_max, parameter_m, parameter_b);
 			}
 		};
+		~signal() {};
 
 		void perform(sample_buffer& buffer, types::disc_32_u block_size_leq, types::channel offset_channel = 0, types::index offset_sample = 0) {
 			rate_audio::perform(buffer, block_size_leq, offset_channel, offset_sample);

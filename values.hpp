@@ -43,6 +43,10 @@ namespace cdsp { namespace values {
 	// index
 	const types::index index_zero				= static_cast<types::index>(0);
 
+	// bolean
+	const types::boolean boolean_true			= static_cast<types::boolean>(true);
+	const types::boolean boolean_false			= static_cast<types::boolean>(false);
+
 #ifdef CDSP_SAMPLE_32
 	const types::sample sample_zero				= static_cast<types::sample>(0.0f);
 	const types::sample sample_one				= static_cast<types::sample>(1.0f);

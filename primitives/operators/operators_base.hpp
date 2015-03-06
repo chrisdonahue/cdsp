@@ -20,7 +20,7 @@ namespace cdsp { namespace primitives { namespace operators {
 
 	protected:
 		types::boolean operand_use;
-		parameter::ramp_linear_automatic operand;
+		parameters::ramp_linear_automatic operand;
 	};
 }}}
 
