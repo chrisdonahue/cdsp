@@ -10,6 +10,7 @@
 #include "primitives/operators/add.hpp"
 #include "primitives/operators/multiply.hpp"
 #include "primitives/oscillators/phasor.hpp"
+#include "primitives/tables/table_phasor.hpp"
 #include "primitives/tables/table_oscillator.hpp"
 #include "primitives/tables/table_function.hpp"
 

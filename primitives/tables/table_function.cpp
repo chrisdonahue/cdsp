@@ -87,9 +87,9 @@ void cdsp::primitives::tables::function::interpolate_4::perform(sample_buffer& b
 	}
 
 	// create state
-	types::sample x_current;
-	types::index table_index_current;
-	types::sample table_index_current_fraction;
+	types::sample x;
+	types::index table_index;
+	types::sample table_index_fraction;
 	types::sample inm1;
 	types::sample in0;
 	types::sample inp1;
@@ -100,31 +100,31 @@ void cdsp::primitives::tables::function::interpolate_4::perform(sample_buffer& b
 	types::sample* output = buffer.channel_pointer_write(offset_channel, offset_sample);
 	while (samples_remaining--) {
 		// find current function value
-		x_current = *(x_buffer++);
+		x = *(x_buffer++);
 
 		// map range to table indices
-		x_current = x_current * x_m + x_b;
+		x = x * x_m + x_b;
 
 		// calculate current table index
-		table_index_current = static_cast<types::index>(floor(x_current));
+		table_index = static_cast<types::index>(floor(x));
 
 		// check index
 #ifdef CDSP_DEBUG_DSP
-		if (table_index_current < 1 || table_index_current > table_length - 3) {
+		if (table_index < 1 || table_index > table_length - 3) {
 			throw exceptions::runtime("cdsp::primitives::tables::function::interpolate_4::perform: table_index was out of range");
 		}
 #endif
 
 		// calculate fractional part
-		table_index_current_fraction = x_current - table_index_current;
+		table_index_fraction = x - table_index;
 
 		// retrieve table values
-		inm1 = table[(table_index_current - 1)];
-		in0 = table[table_index_current];
-		inp1 = table[(table_index_current + 1)];
-		inp2 = table[(table_index_current + 2)];
+		inm1 = table[(table_index - 1)];
+		in0 = table[table_index];
+		inp1 = table[(table_index + 1)];
+		inp2 = table[(table_index + 2)];
 		
 		// output
-		*(output++) = static_cast<types::sample>(in0 + 0.5 * table_index_current_fraction * (inp1 - inm1 + table_index_current_fraction * (4.0 * inp1 + 2.0 * inm1 - 5.0 * in0 - inp2 + table_index_current_fraction * (3.0 * (in0 - inp1) - inm1 + inp2))));
+		*(output++) = static_cast<types::sample>(in0 + 0.5 * table_index_fraction * (inp1 - inm1 + table_index_fraction * (4.0 * inp1 + 2.0 * inm1 - 5.0 * in0 - inp2 + table_index_fraction * (3.0 * (in0 - inp1) - inm1 + inp2))));
 	}
 };

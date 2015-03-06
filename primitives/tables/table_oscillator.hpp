@@ -8,15 +8,16 @@ namespace cdsp { namespace primitives { namespace tables { namespace oscillator 
 	class base : public tables::base {
 	public:
 		base();
-		base(types::sample _phase);
-		base(types::sample _phase, types::sample _frequency);
+		base(types::sample _phase_initial);
+		base(types::sample _phase_initial, types::sample _frequency);
 
 		void table_set(types::index _table_length, const types::sample* _table);
 
 		void prepare(types::cont_64 _sample_rate, types::index _block_size);
 
 		void phase_reset();
-		void phase_set(types::sample _phase);
+
+		void phase_initial_set(types::sample _phase_initial);
 
 		void frequency_set(types::sample frequency);
 		void frequency_next_set(types::sample frequency_next);
@@ -26,7 +27,8 @@ namespace cdsp { namespace primitives { namespace tables { namespace oscillator 
 		types::index table_mask;
 		types::sample table_length_sample;
 
-		types::sample phase;
+		types::sample table_index;
+		parameters::rate_block<types::sample> phase_initial;
 		parameters::ramp_linear_automatic frequency;
 	};
 

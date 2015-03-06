@@ -1,0 +1,9 @@
+table_phasor (for PM synthesis)
+	reads through table indexed from [0.0, 1.0], table_length must be power of two, table assumed to be cyclic
+		no parameter plugs (input is phase)
+table_function (for waveshaping)
+	reads through table indexed from [a, b], table_length must be greater than 4, no assumptions about table are made
+		no parameter plugs (input is x)
+table_oscillator (for basic oscillators and FM synthesis)
+	oscillates through table at a given frequency, table_length must be power of two, table assumed to be cyclic
+		parameter plug (frequency)

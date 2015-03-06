@@ -5,6 +5,9 @@ cdsp::primitives::oscillators::phasor::phasor() :
 	phase(values::sample_zero, values::sample_one),
 	frequency(values::sample_zero, values::sample_one)
 {
+	channels_input_num_set(0);
+	channels_output_num_set(1);
+	parameter_plug_register("frequency");
 };
 
 cdsp::primitives::oscillators::phasor::phasor(types::sample _phase, types::sample _frequency) :
@@ -12,7 +15,16 @@ cdsp::primitives::oscillators::phasor::phasor(types::sample _phase, types::sampl
 	phase(_phase, values::sample_zero, values::sample_one),
 	frequency(_frequency, values::sample_zero, values::sample_one)
 {
+	channels_input_num_set(0);
+	channels_output_num_set(1);
+	parameter_plug_register("frequency");
 };
+
+void cdsp::primitives::oscillators::phasor::prepare(types::cont_64 _sample_rate, types::index _block_size) {
+	base::prepare(_sample_rate, _block_size);
+
+	frequency.prepare(_sample_rate, _block_size);
+}
 
 void cdsp::primitives::oscillators::phasor::perform(sample_buffer& buffer, types::disc_32_u block_size_leq, types::channel offset_channel, types::index offset_sample) {
 	base::perform(buffer, block_size_leq, offset_channel, offset_sample);
