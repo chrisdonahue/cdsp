@@ -45,7 +45,7 @@ namespace cdsp { namespace parameters {
 		{};
 
 		// pure virtual destructor to declare class as abstract
-		virtual ~base() = 0 {};
+		virtual ~base() = 0;
 
 		types::boolean value_valid_get() {
 			return value_valid;
@@ -117,6 +117,14 @@ namespace cdsp { namespace parameters {
 		types::boolean value_min_valid;
 		types::boolean value_max_valid;
 	};
+
+	// this is horrible... explanation:
+		// i want cdsp::parameters::base::~base to be pure virtual (making the class abstract)
+		// i can't inline the declaration AND definition for a pure virtual function in GCC
+		// i can't define templated class methods in a cpp file without explicit type instantiation
+		// subclasses need base<T>::~base() to be defined for automatic inheritance
+		// therefore it has to be here!
+	template <typename T> base<T>::~base() {};
 
 	template <typename T>
 	class rate_block : public parameters::base<T> {
