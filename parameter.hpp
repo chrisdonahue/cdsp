@@ -155,6 +155,7 @@ namespace cdsp { namespace parameters {
 			rate_audio::perform(buffer, block_size_leq, offset_channel, offset_sample);
 
 #ifdef CDSP_DEBUG_DSP
+			/*
 			if (value_range_valid_get()) {
 				types::index samples_remaining = block_size_leq;
 				const types::sample* samples = buffer.channel_pointer_read(offset_channel, offset_sample);
@@ -166,6 +167,7 @@ namespace cdsp { namespace parameters {
 					}
 				}
 			}
+			*/
 #endif
 		};
 
