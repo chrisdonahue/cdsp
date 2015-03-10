@@ -6,6 +6,7 @@
 #include "types.hpp"
 #include "values.hpp"
 
+#include "abstraction/pm_voice.hpp"
 #include "primitives/envelopes/interpolate_linear.hpp"
 #include "primitives/operators/add.hpp"
 #include "primitives/operators/multiply.hpp"
