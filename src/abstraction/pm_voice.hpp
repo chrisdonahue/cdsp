@@ -26,6 +26,11 @@ namespace cdsp { namespace abstraction {
 		void f_c_set(types::sample f_c);
 		void a_set(types::sample a);
 
+		void i_set_next(types::sample i);
+		void f_m_set_next(types::sample f_m);
+		void f_c_set_next(types::sample f_c);
+		void a_set_next(types::sample a);
+
 	private:
 		primitives::tables::oscillator::interpolate_4 	modulator;
 		primitives::operators::multiply 				multiplier_index;

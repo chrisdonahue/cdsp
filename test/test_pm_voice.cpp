@@ -6,8 +6,8 @@ int main(int argc, char* argv[])
 {
 	// create output buffer
 	types::cont_64 sample_rate = 44100.0;
-	types::index block_size = 1024;
-	types::index output_buffer_length = block_size * 128;
+	types::index block_size = 4096;
+	types::index output_buffer_length = block_size * 32;
 	sample_buffer output_buffer(2, output_buffer_length);
 	output_buffer.clear();
 
@@ -24,9 +24,9 @@ int main(int argc, char* argv[])
 	pm_voice_1.prepare(sample_rate, block_size);
 
 	// set parameters
-	pm_voice_1.f_m_set(100.0);
-	pm_voice_1.i_set(1.0);
-	pm_voice_1.f_c_set(440.0);
+	pm_voice_1.f_m_set(50.0f / sample_rate);
+	pm_voice_1.i_set(1.0f / values::two_pi_32);
+	pm_voice_1.f_c_set(440.0f / sample_rate);
 	pm_voice_1.a_set(0.5f);
 
 	// perform
@@ -42,6 +42,14 @@ int main(int argc, char* argv[])
 
 		samples_completed += block_size_current;
 		samples_remaining -= block_size_current;
+		
+		if (samples_remaining == output_buffer_length / 2) {
+			pm_voice_1.reset();
+			pm_voice_1.f_m_set(100.0f / sample_rate);
+			pm_voice_1.i_set(1.0f / values::two_pi_32);
+			pm_voice_1.f_c_set(440.0f / sample_rate);
+			pm_voice_1.a_set(0.5f);
+		}
 	}
 
 	// resize
