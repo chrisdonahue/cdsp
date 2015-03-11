@@ -1,0 +1,117 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{9345C55E-91F9-4A83-9B18-0359E5B8DB6B}</ProjectGuid>
+    <RootNamespace>cdsp</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v110</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v110</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup />
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>true</SDLCheck>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\src\abstraction\pm_voice.cpp" />
+    <ClCompile Include="..\..\src\base.cpp" />
+    <ClCompile Include="..\..\src\exceptions.cpp" />
+    <ClCompile Include="..\..\src\graph.cpp" />
+    <ClCompile Include="..\..\src\helpers.cpp" />
+    <ClCompile Include="..\..\src\parameter.cpp" />
+    <ClCompile Include="..\..\src\primitives\envelopes\adsr.cpp" />
+    <ClCompile Include="..\..\src\primitives\envelopes\envelopes_base.cpp" />
+    <ClCompile Include="..\..\src\primitives\envelopes\interpolate_linear.cpp" />
+    <ClCompile Include="..\..\src\primitives\misc\fm_feedback.cpp" />
+    <ClCompile Include="..\..\src\primitives\operators\add.cpp" />
+    <ClCompile Include="..\..\src\primitives\operators\multiply.cpp" />
+    <ClCompile Include="..\..\src\primitives\operators\operators_base.cpp" />
+    <ClCompile Include="..\..\src\primitives\oscillators\phasor.cpp" />
+    <ClCompile Include="..\..\src\primitives\primitives_base.cpp" />
+    <ClCompile Include="..\..\src\primitives\tables\tables_base.cpp" />
+    <ClCompile Include="..\..\src\primitives\tables\table_function.cpp" />
+    <ClCompile Include="..\..\src\primitives\tables\table_oscillator.cpp" />
+    <ClCompile Include="..\..\src\primitives\tables\table_phasor.cpp" />
+    <ClCompile Include="..\..\src\sample_buffer.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\src\abstraction\pm_voice.hpp" />
+    <ClInclude Include="..\..\src\base.hpp" />
+    <ClInclude Include="..\..\src\cdsp.hpp" />
+    <ClInclude Include="..\..\src\defines.hpp" />
+    <ClInclude Include="..\..\src\exceptions.hpp" />
+    <ClInclude Include="..\..\src\graph.hpp" />
+    <ClInclude Include="..\..\src\helpers.hpp" />
+    <ClInclude Include="..\..\src\parameter.hpp" />
+    <ClInclude Include="..\..\src\primitives\envelopes\adsr.hpp" />
+    <ClInclude Include="..\..\src\primitives\envelopes\envelopes_base.hpp" />
+    <ClInclude Include="..\..\src\primitives\envelopes\interpolate_linear.hpp" />
+    <ClInclude Include="..\..\src\primitives\misc\fm_feedback.hpp" />
+    <ClInclude Include="..\..\src\primitives\operators\add.hpp" />
+    <ClInclude Include="..\..\src\primitives\operators\multiply.hpp" />
+    <ClInclude Include="..\..\src\primitives\operators\operators_base.hpp" />
+    <ClInclude Include="..\..\src\primitives\oscillators\phasor.hpp" />
+    <ClInclude Include="..\..\src\primitives\primitives_base.hpp" />
+    <ClInclude Include="..\..\src\primitives\tables\tables_base.hpp" />
+    <ClInclude Include="..\..\src\primitives\tables\table_function.hpp" />
+    <ClInclude Include="..\..\src\primitives\tables\table_oscillator.hpp" />
+    <ClInclude Include="..\..\src\primitives\tables\table_phasor.hpp" />
+    <ClInclude Include="..\..\src\sample_buffer.hpp" />
+    <ClInclude Include="..\..\src\types.hpp" />
+    <ClInclude Include="..\..\src\values.hpp" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
