@@ -28,6 +28,9 @@ namespace cdsp { namespace helpers {
 		extern void cosine(types::disc_32_u buffer_length, types::sample* buffer);
 	}
 
+	// runge kutta
+	extern void runge_kutta_4(types::sample* buffer_derivatives, types::index state_num, types::sample* buffer_params, void(*f)(types::sample*, const types::sample*, const types::sample*), types::sample h, types::sample* buffer_state);
+
 	// range mappers
 	template <typename T> void range_map_linear(T w, T x, T y, T z, T& m, T& b) {
 		m = (z - y) / (x - w);

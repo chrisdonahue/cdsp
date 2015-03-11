@@ -67,6 +67,34 @@ void cdsp::helpers::generators::cosine(types::disc_32_u buffer_length, types::sa
 	sinusoid(buffer_length, buffer, values::one_64, values::one_64, values::zero_64);
 }
 
+void cdsp::helpers::runge_kutta_4(types::sample* buffer_derivatives, types::index state_num, types::sample* buffer_params, void(*f)(types::sample*, const types::sample*, const types::sample*), types::sample h, types::sample* buffer_state) {
+	// buffer_derivatives must be length (5*param_num)
+    float* deriv1 = buffer_derivatives;
+	float* deriv2 = deriv1 + state_num;
+	float* deriv3 = deriv2 + state_num;
+	float* deriv4 = deriv3 + state_num;
+	float* tempstate = deriv4 + state_num;
+
+	int i;
+
+    f(deriv1, buffer_state, buffer_params);
+    for (i = 0; i < state_num; i++) {
+		tempstate[i] = buffer_state[i] + 0.5 * h * deriv1[i];
+	}
+	f(deriv2, tempstate, buffer_params);
+    for (i = 0; i < state_num; i++) {
+		tempstate[i] = buffer_state[i] + 0.5 * h * deriv2[i];
+	}
+	f(deriv3, tempstate, buffer_params);
+    for (i = 0; i < state_num; i++) {
+		tempstate[i] = buffer_state[i] + h * deriv3[i];
+	}
+	f(deriv4, tempstate, buffer_params);
+    for (i = 0; i < state_num; i++) {
+		buffer_state[i] += (1./6.) * h * (deriv1[i] + 2 * deriv2[i] + 2 * deriv3[i] + deriv4[i]);
+	}
+};
+
 template <typename T>
 void write(std::ofstream& stream, const T& t) {
 	stream.write((const char*)&t, sizeof(T));
