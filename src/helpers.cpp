@@ -69,21 +69,21 @@ void cdsp::helpers::generators::cosine(types::disc_32_u buffer_length, types::sa
 
 void cdsp::helpers::runge_kutta_4(types::sample* buffer_derivatives, types::index state_num, types::sample* buffer_params, void(*f)(types::sample*, const types::sample*, const types::sample*), types::sample h, types::sample* buffer_state) {
 	// buffer_derivatives must be length (5*param_num)
-    float* deriv1 = buffer_derivatives;
-	float* deriv2 = deriv1 + state_num;
-	float* deriv3 = deriv2 + state_num;
-	float* deriv4 = deriv3 + state_num;
-	float* tempstate = deriv4 + state_num;
+	types::sample* deriv1 = buffer_derivatives;
+	types::sample* deriv2 = deriv1 + state_num;
+	types::sample* deriv3 = deriv2 + state_num;
+	types::sample* deriv4 = deriv3 + state_num;
+	types::sample* tempstate = deriv4 + state_num;
 
-	int i;
+	types::index i;
 
     f(deriv1, buffer_state, buffer_params);
     for (i = 0; i < state_num; i++) {
-		tempstate[i] = buffer_state[i] + 0.5 * h * deriv1[i];
+		tempstate[i] = buffer_state[i] + 0.5f * h * deriv1[i];
 	}
 	f(deriv2, tempstate, buffer_params);
     for (i = 0; i < state_num; i++) {
-		tempstate[i] = buffer_state[i] + 0.5 * h * deriv2[i];
+		tempstate[i] = buffer_state[i] + 0.5f * h * deriv2[i];
 	}
 	f(deriv3, tempstate, buffer_params);
     for (i = 0; i < state_num; i++) {
@@ -91,7 +91,7 @@ void cdsp::helpers::runge_kutta_4(types::sample* buffer_derivatives, types::inde
 	}
 	f(deriv4, tempstate, buffer_params);
     for (i = 0; i < state_num; i++) {
-		buffer_state[i] += (1./6.) * h * (deriv1[i] + 2 * deriv2[i] + 2 * deriv3[i] + deriv4[i]);
+		buffer_state[i] += (1.0f/6.0f) * h * (deriv1[i] + 2.0f * deriv2[i] + 2.0f * deriv3[i] + deriv4[i]);
 	}
 };
 
