@@ -6,6 +6,14 @@
 #include "defines.hpp"
 #include "types.hpp"
 
+#ifdef min
+#undef min
+#endif
+
+#ifdef max
+#undef max
+#endif
+
 namespace cdsp { namespace values {
 	// pi
 	const types::cont_64 pi_64					= 3.1415926535897932384626433832795028841971693993751;

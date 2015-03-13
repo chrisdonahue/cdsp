@@ -34,7 +34,8 @@ void cdsp::primitives::misc::fm_feedback::perform(sample_buffer& buffer, types::
 	types::sample* output = buffer.channel_pointer_write(offset_channel, offset_sample);
 	while (samples_remaining--) {
 		// find current function value
-		x = *(x_buffer++);
+		//x = *(x_buffer++);
+	}
 };
 
 #define PARAM_T (parameters[0])
