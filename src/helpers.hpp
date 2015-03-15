@@ -38,7 +38,7 @@ namespace cdsp { namespace helpers {
 	};
 
 	namespace io {
-		extern void wav_file_save(std::string file_path, types::cont_64 sample_rate, types::disc_32_u sample_bit_depth, sample_buffer& sample_buffer);
+		extern void wav_file_save(std::string file_path, types::cont_64 sample_rate, types::disc_32_u sample_bit_depth, sample_buffer& sample_buffer, types::channel channel=0);
 	}
 }}
 
