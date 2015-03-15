@@ -105,7 +105,7 @@ void cdsp::helpers::io::wav_file_save(std::string file_path, types::cont_64 samp
 	sample_bit_depth;
 
 	// adapt my signature
-	size_t bufSize = buffer.buffer_size_get();
+	size_t bufSize = buffer.channel_buffer_length_get() * sizeof(types::sample);
 	//short channels = static_cast<short>(buffer.channels_num_get());
 	short channels = 1;
 	int sampleRate = static_cast<int>(sample_rate);
