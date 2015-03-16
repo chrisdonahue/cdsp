@@ -35,7 +35,9 @@ namespace cdsp { namespace primitives { namespace envelopes {
 			channels_output_num_set(1);
 		};
 
-		virtual void perform(sample_buffer& buffer, types::disc_32_u block_size_leq, types::channel offset_channel = 0, types::index offset_sample = 0) = 0;
+		virtual void perform(sample_buffer& buffer, types::disc_32_u block_size_leq, types::channel offset_channel = 0, types::index offset_sample = 0) = 0 {
+			primitives::base::perform(buffer, block_size_leq, offset_channel, offset_sample);
+		};
 
 		void reset() {
 			value = value_initial;

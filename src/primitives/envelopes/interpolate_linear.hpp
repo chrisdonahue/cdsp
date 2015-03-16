@@ -1,6 +1,8 @@
 #ifndef CDSP_PRIMITIVES_ENVELOPES_INTERPOLATE_LINEAR
 #define CDSP_PRIMITIVES_ENVELOPES_INTERPOLATE_LINEAR
 
+#include <tuple>
+
 #include "envelopes_base.hpp"
 
 namespace cdsp { namespace primitives { namespace envelopes {
@@ -60,17 +62,17 @@ namespace cdsp { namespace primitives { namespace envelopes {
 			base<points_num>::point_set(point_index, length_s, value);
 
 			// calculate length of segment in samples
-			types::index point_length = static_cast<types::index>(delay_s * sample_rate);
+			types::index point_length = static_cast<types::index>(length_s * sample_rate);
 
 			// calculate linear increment
 			types::sample point_increment;
-			if (points_index_current == 0) {
+			if (point_index == 0) {
 				point_increment = (value - value_initial)/static_cast<types::sample>(point_length);
 				point_samples_remaining = point_length;
 				point_increment_current = point_increment;
 			}
 			else {
-				point_increment = (value - points.at(points_size - 2).second) / static_cast<types::sample>(point_length);
+				point_increment = (value - points.at(point_index - 1).second) / static_cast<types::sample>(point_length);
 			}
 
 			// add point increment
