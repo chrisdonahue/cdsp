@@ -36,10 +36,10 @@ int main(int argc, char* argv[])
 	pm_voice_1.i_set(1.0f / values::two_pi_32);
 	pm_voice_1.f_c_set(440.0f / sample_rate);
 	pm_voice_1.a_set(1.0f);
-	env.point_set(0, 0.01, 1.0);
-	env.point_set(1, 0.1, 0.8);
-	env.point_set(2, 0.5, 0.8);
-	env.point_set(3, 0.3, 0.0);
+	env.point_set(0, 0.04, 0.04);
+	env.point_set(1, 0.6, 0.64);
+	env.point_set(2, 0.37, 0.38);
+	env.point_set(3, 0.0, 0.16);
 
 	// perform
 	types::index samples_completed = 0;

@@ -63,6 +63,9 @@ namespace cdsp { namespace primitives { namespace envelopes {
 
 			// calculate length of segment in samples
 			types::index point_length = static_cast<types::index>(length_s * sample_rate);
+			if (point_length == 0) {
+				point_length = 1;
+			}
 
 			// calculate linear increment
 			types::sample point_increment;
