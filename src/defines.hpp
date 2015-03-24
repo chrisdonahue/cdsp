@@ -7,12 +7,15 @@
 
 // OS FLAGS
 #ifdef _WIN32
-#define CDSP_WIN32
+#define CDSP_WIN
+#endif
 #ifdef _WIN64
-#define CDSP_WIN64
+#define CDSP_WIN_64
+#else
+#define CDSP_WIN_32
 #endif
 #elif __APPLE__
-#define CDSP_MACOS
+#define CDSP_MAC
 #elif __linux
 #define CDSP_LINUX
 #elif __unix

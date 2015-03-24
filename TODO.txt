@@ -1,30 +1,41 @@
-graph.hpp:
-	pretty much everything
-
-interpolate_linear.hpp
-	change name to linear.hpp
-	consider interface (using in realtime/adding points)
-	create increments at prepare time
-
-everything:
-	transfer extra hpp stuff to cpp
-	create parameter/ folder
-	create README.md
-	create Makefile to compile it as a library for static linking
-	move primitives_base to cdsp/... oscillators_base to primitives/... etc;
-	remove pluralism on namespace/folder names
+short term:
+	exceptions.hpp
+		figure out how to print stack trace in C++
+	cdsp::circular_buffer
+	parameters overhaul (see bottom) (circular buffer)
+	primitives overhaul:
+		all of these for rate_block<T> vs rate_linear:
+			parameter<T>& parameter_get_read(specifier)
+			const parameter<T>& parameter_get_write(specifier)
+			void parameter_register_read(specifier, const parameter&)
+			void parameter_register_write(specifier, parameter&)
+	envelopes overhaul (align with parameter) (can this be the same code as rate_audio?)
 	make interpolate framework a templated parameter to any table oscillator <interpolate::four, interpolate::two, interpolate::truncate>
-	rethink value_next_set(time) stuff to be absolute time instead of relative (ala javascript audioparam)
-	list of times for value_next_set (so we can set value at a time rather than one at a time)
+	graph.hpp
+	create README.md
 
-tables:
+long term:
+	remove pluralism on namespace/folder names
+	move hpp stuff to cpp
+	cmake project for cross platform (library for static linking)
+	test on mac, linux, ARM
+
+optimizations:
+	phasor.hpp and table_hpp UNITBIT32
+
+bugfixes:
 	hard clip input for table_function
-
-questions:
-	UNITBIT32
 
 questions:
 	figure out using for constructors
 	initialization list used by all constructors?
 	shared_ptr for shared tables? (table_interpolate_4)
-	references instead of pointers for parameter_plugs in primitive_base.hpp?
+
+parameter:
+	//https://developer.mozilla.org/en-US/docs/Web/API/AudioParam except with relative times instead of absolute
+	parameter<T> (need to add all functionality here then throw exceptions)
+			setValueAtTime(value, time)
+			linearRampToValueAtTime(
+		rate_block<T>
+		rate_audio
+			signal

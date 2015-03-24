@@ -71,6 +71,9 @@ namespace cdsp { namespace primitives {
 			parameter_plug_specifiers.insert(parameter_specifier);
 		};
 
+		void parameter_get(types::string parameter_specifier) {
+		};
+
 		parameters::signal* parameter_plug_get(types::string parameter_specifier) {
 			auto it = parameter_plugs.find(parameter_specifier);
 			if (it != parameter_plugs.end()) {
