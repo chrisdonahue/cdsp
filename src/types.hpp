@@ -1,11 +1,11 @@
-#ifndef CDSP_TYPES
-#define CDSP_TYPES
+#ifndef CDSP_TYPE
+#define CDSP_TYPE
 
 #include <map>
 #include <string>
 #include <unordered_map>
 
-#include "defines.hpp"
+#include "define.hpp"
 
 namespace cdsp { namespace types {
 	typedef unsigned disc_32_u;

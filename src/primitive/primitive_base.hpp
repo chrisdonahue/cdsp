@@ -5,13 +5,13 @@
 #include <unordered_map>
 #include <utility>
 
-#include "../exceptions.hpp"
+#include "../exception.hpp"
 #include "../parameter.hpp"
 #include "../sample_buffer.hpp"
 #include "../types.hpp"
 #include "../values.hpp"
 
-namespace cdsp { namespace primitives {
+namespace cdsp { namespace primitive {
 	class base : public dsp {
 	public:
 		base() : dsp(),
@@ -59,7 +59,7 @@ namespace cdsp { namespace primitives {
 		};
 
 	protected:
-		void parameter_specifier_register(types::string parameter_specifier) {
+		void parameter_specifier_expose(types::string parameter_specifier) {
 			parameter_specifiers.insert(parameter_specifier);
 		};
 
@@ -72,13 +72,13 @@ namespace cdsp { namespace primitives {
 	public:
 		parameterized_rate_block() : parameterized() {};
 
-		parameters::rate_block<T>& parameter_get(types::string parameter_specifier) {
+		parameter::rate_block::base<T>& parameter_get(types::string parameter_specifier) {
 			auto it = parameters_rate_block.find(parameter_specifier);
-			types::boolean parameter_specifier_registered = it != parameter_specifiers_pluggable.end();
+			types::boolean parameter_specifier_exposeed = it != parameter_specifiers_pluggable.end();
 
 #ifdef CDSP_DEBUG_API
-			if (!parameter_specifier_registered) {
-				throw cdsp::exceptions::runtime("no block-rate parameter with this specifier was registered by this primitive");
+			if (!parameter_specifier_exposeed) {
+				throw cdsp::exception::runtime("no block-rate parameter with this specifier was registered by this primitive");
 			}
 #endif
 
@@ -86,13 +86,13 @@ namespace cdsp { namespace primitives {
 		};
 
 	protected:
-		void parameter_register(types::string parameter_specifier, parameters::rate_block<T>& parameter) {
-			parameterized::parameter_specifier_register(parameter_specifier);
+		void parameter_expose(types::string parameter_specifier, parameter::rate_block::base<T>& parameter) {
+			parameterized::parameter_specifier_expose(parameter_specifier);
 			parameters_rate_block.insert(std::make_pair(parameter_specifier, parameter));
 		};
 
 	private:
-		std::unordered_map<types::string, parameters::rate_block<T>* > parameters_rate_block;
+		std::unordered_map<types::string, parameter::rate_block::base<T>* > parameters_rate_block;
 	};
 
 	class parameterized_rate_audio : public parameterized {
@@ -115,13 +115,13 @@ namespace cdsp { namespace primitives {
 		virtual void perform(perform_signature_defaults) = 0;
 
 	protected:
-		void parameter_register(types::string parameter_specifier, parameters::rate_audio& parameter) {
-			parameterized::parameter_specifier_register(parameter_specifier);
+		void parameter_expose(types::string parameter_specifier, parameter::rate_audio::base& parameter) {
+			parameterized::parameter_specifier_expose(parameter_specifier);
 			parameters_rate_audio.insert(std::make_pair(parameter_specifier, &parameter));
 		};
 
 	private:
-		std::unordered_map<types::string, parameters::rate_audio* > parameters_rate_audio;
+		std::unordered_map<types::string, parameter::rate_audio::base* > parameters_rate_audio;
 	};
 
 	class parameterized_rate_audio_pluggable : public parameterized_rate_audio {
@@ -149,12 +149,12 @@ namespace cdsp { namespace primitives {
 		};
 
 		// plugs
-		void parameter_plug(types::string parameter_specifier, parameters::signal& parameter_plug) {
+		void parameter_plug(types::string parameter_specifier, parameter::rate_audio::signal& parameter_plug) {
 			types::boolean parameter_specifier_pluggable = parameter_specifiers_pluggable.find(parameter_specifier) != parameter_specifiers_pluggable.end();
 
 #ifdef CDSP_DEBUG_API
 			if (!parameter_specifier_pluggable) {
-				throw cdsp::exceptions::runtime("tried to plug a parameter specifier that was not registered as pluggable by this primitive");
+				throw cdsp::exception::runtime("tried to plug a parameter specifier that was not registered as pluggable by this primitive");
 			}
 #endif
 
@@ -166,8 +166,7 @@ namespace cdsp { namespace primitives {
 		};
 
 	protected:
-		void parameter_register_pluggable(types::string parameter_specifier, parameters::rate_audio& parameter) {
-			parameter_register(parameter_specifier, parameter);
+		void parameter_expose_pluggable(types::string parameter_specifier) {
 			parameter_specifiers_pluggable.insert(parameter_specifier);
 		};
 
@@ -175,7 +174,7 @@ namespace cdsp { namespace primitives {
 			return parameters_rate_audio_plugged.find(parameter_specifier) != parameters_rate_audio_plugged.end();
 		};
 
-		parameters::signal& parameter_plugged_get(types::string parameter_specifier) {
+		parameter::rate_audio::signal& parameter_plugged_get(types::string parameter_specifier) {
 			auto it = parameters_rate_audio_plugged.find(parameter_specifier);
 			types::boolean parameter_plugged = it != parameters_rate_audio_plugged.end();
 
@@ -188,7 +187,7 @@ namespace cdsp { namespace primitives {
 
 	private:
 		std::set<types::string> parameter_specifiers_pluggable;
-		std::unordered_map<types::string, parameters::signal* > parameters_rate_audio_plugged;
+		std::unordered_map<types::string, parameter::rate_audio::signal* > parameters_rate_audio_plugged;
 	};
 }}
 

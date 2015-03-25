@@ -1,5 +1,5 @@
-#ifndef CDSP_HELPERS
-#define CDSP_HELPERS
+#ifndef CDSP_HELPER
+#define CDSP_HELPER
 
 #include <cmath>
 #include <cstdio>
@@ -9,19 +9,19 @@
 #include <tuple>
 #include <unordered_map>
 
-#include "defines.hpp"
-#include "exceptions.hpp"
+#include "define.hpp"
+#include "exception.hpp"
 #include "sample_buffer.hpp"
 #include "types.hpp"
 #include "values.hpp"
 
-namespace cdsp { namespace helpers {
+namespace cdsp { namespace helper {
 	// powers of two
 	extern types::disc_32_u two_to_n(types::disc_32_u n);
 	extern types::boolean is_power_of_two(types::disc_32_u n);
 
 	// wavetable helpers
-	namespace generators {
+	namespace generator {
 		extern void sinusoid_sum(std::set<std::tuple<types::cont_64, types::cont_64, types::cont_64> > partials, types::disc_32_u buffer_length, types::sample* buffer);
 		extern void sinusoid(types::disc_32_u buffer_length, types::sample* buffer, types::cont_64 frequency=1.0, types::cont_64 amplitude=1.0, types::cont_64 phase=0.0);
 		extern void sine(types::disc_32_u buffer_length, types::sample* buffer);

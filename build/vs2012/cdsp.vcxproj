@@ -10,6 +10,32 @@
       <Platform>Win32</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\src\base.hpp" />
+    <ClInclude Include="..\..\src\cdsp.hpp" />
+    <ClInclude Include="..\..\src\define.hpp" />
+    <ClInclude Include="..\..\src\exception.hpp" />
+    <ClInclude Include="..\..\src\helper.hpp" />
+    <ClInclude Include="..\..\src\parameter.hpp" />
+    <ClInclude Include="..\..\src\primitive\primitive_base.hpp" />
+    <ClInclude Include="..\..\src\primitive\table\table_abstract.hpp" />
+    <ClInclude Include="..\..\src\primitive\table\table_oscillator.hpp" />
+    <ClInclude Include="..\..\src\primitive\table\table_phasor.hpp" />
+    <ClInclude Include="..\..\src\sample_buffer.hpp" />
+    <ClInclude Include="..\..\src\types.hpp" />
+    <ClInclude Include="..\..\src\values.hpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\src\base.cpp" />
+    <ClCompile Include="..\..\src\exception.cpp" />
+    <ClCompile Include="..\..\src\helper.cpp" />
+    <ClCompile Include="..\..\src\parameter.cpp" />
+    <ClCompile Include="..\..\src\primitive\primitive_base.cpp" />
+    <ClCompile Include="..\..\src\primitive\table\table_abstract.cpp" />
+    <ClCompile Include="..\..\src\primitive\table\table_oscillator.cpp" />
+    <ClCompile Include="..\..\src\primitive\table\table_phasor.cpp" />
+    <ClCompile Include="..\..\src\sample_buffer.cpp" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{9345C55E-91F9-4A83-9B18-0359E5B8DB6B}</ProjectGuid>
     <RootNamespace>cdsp</RootNamespace>
@@ -63,56 +89,6 @@
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
   </ItemDefinitionGroup>
-  <ItemGroup>
-    <ClCompile Include="..\..\src\abstraction\pm_voice.cpp" />
-    <ClCompile Include="..\..\src\base.cpp" />
-    <ClCompile Include="..\..\src\circular_buffer.cpp" />
-    <ClCompile Include="..\..\src\exceptions.cpp" />
-    <ClCompile Include="..\..\src\graph.cpp" />
-    <ClCompile Include="..\..\src\helpers.cpp" />
-    <ClCompile Include="..\..\src\parameter.cpp" />
-    <ClCompile Include="..\..\src\primitives\envelopes\adsr.cpp" />
-    <ClCompile Include="..\..\src\primitives\envelopes\envelopes_base.cpp" />
-    <ClCompile Include="..\..\src\primitives\envelopes\interpolate_linear.cpp" />
-    <ClCompile Include="..\..\src\primitives\misc\fm_feedback.cpp" />
-    <ClCompile Include="..\..\src\primitives\operators\add.cpp" />
-    <ClCompile Include="..\..\src\primitives\operators\multiply.cpp" />
-    <ClCompile Include="..\..\src\primitives\operators\operators_base.cpp" />
-    <ClCompile Include="..\..\src\primitives\oscillators\phasor.cpp" />
-    <ClCompile Include="..\..\src\primitives\primitives_base.cpp" />
-    <ClCompile Include="..\..\src\primitives\tables\tables_base.cpp" />
-    <ClCompile Include="..\..\src\primitives\tables\table_function.cpp" />
-    <ClCompile Include="..\..\src\primitives\tables\table_oscillator.cpp" />
-    <ClCompile Include="..\..\src\primitives\tables\table_phasor.cpp" />
-    <ClCompile Include="..\..\src\sample_buffer.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="..\..\src\abstraction\pm_voice.hpp" />
-    <ClInclude Include="..\..\src\base.hpp" />
-    <ClInclude Include="..\..\src\cdsp.hpp" />
-    <ClInclude Include="..\..\src\circular_buffer.hpp" />
-    <ClInclude Include="..\..\src\defines.hpp" />
-    <ClInclude Include="..\..\src\exceptions.hpp" />
-    <ClInclude Include="..\..\src\graph.hpp" />
-    <ClInclude Include="..\..\src\helpers.hpp" />
-    <ClInclude Include="..\..\src\parameter.hpp" />
-    <ClInclude Include="..\..\src\primitives\envelopes\adsr.hpp" />
-    <ClInclude Include="..\..\src\primitives\envelopes\envelopes_base.hpp" />
-    <ClInclude Include="..\..\src\primitives\envelopes\interpolate_linear.hpp" />
-    <ClInclude Include="..\..\src\primitives\misc\fm_feedback.hpp" />
-    <ClInclude Include="..\..\src\primitives\operators\add.hpp" />
-    <ClInclude Include="..\..\src\primitives\operators\multiply.hpp" />
-    <ClInclude Include="..\..\src\primitives\operators\operators_base.hpp" />
-    <ClInclude Include="..\..\src\primitives\oscillators\phasor.hpp" />
-    <ClInclude Include="..\..\src\primitives\primitives_base.hpp" />
-    <ClInclude Include="..\..\src\primitives\tables\tables_base.hpp" />
-    <ClInclude Include="..\..\src\primitives\tables\table_function.hpp" />
-    <ClInclude Include="..\..\src\primitives\tables\table_oscillator.hpp" />
-    <ClInclude Include="..\..\src\primitives\tables\table_phasor.hpp" />
-    <ClInclude Include="..\..\src\sample_buffer.hpp" />
-    <ClInclude Include="..\..\src\types.hpp" />
-    <ClInclude Include="..\..\src\values.hpp" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

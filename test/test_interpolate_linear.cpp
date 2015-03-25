@@ -14,17 +14,17 @@ int main(int argc, char* argv[])
 	// create wavetable
 	types::index table_length = 1024;
 	sample_buffer table(1, table_length);
-	helpers::generators::sine(table_length, table.channel_pointer_write(0));
+	helper::generator::sine(table_length, table.channel_pointer_write(0));
 
 	// create pm_voice
 	abstraction::pm_voice pm_voice_1;
 	pm_voice_1.table_set(table_length, table.channel_pointer_read(0));
 
 	// create envelope
-	primitives::envelopes::interpolate_linear<4> env;
+	primitive::envelopes::interpolate_linear<4> env;
 
 	// create multiplier
-	primitives::operators::multiply multiplier(static_cast<types::channel>(2));
+	primitive::operators::multiply multiplier(static_cast<types::channel>(2));
 
 	// prepare
 	pm_voice_1.prepare(sample_rate, block_size);
@@ -59,7 +59,7 @@ int main(int argc, char* argv[])
 	}
 
 	// save
-	helpers::io::wav_file_save("pm_enveloped.wav", sample_rate, 32, output_buffer, 0);
+	helper::io::wav_file_save("pm_enveloped.wav", sample_rate, 32, output_buffer, 0);
 
 	// set parameters
 	pm_voice_1.f_m_set(100.0f / sample_rate);
@@ -93,7 +93,7 @@ int main(int argc, char* argv[])
 	}
 
 	// save
-	helpers::io::wav_file_save("pm_enveloped_2.wav", sample_rate, 32, output_buffer, 0);
+	helper::io::wav_file_save("pm_enveloped_2.wav", sample_rate, 32, output_buffer, 0);
 
 
 	// release

@@ -1,10 +1,13 @@
 #ifndef CDSP_PRIMITIVES_TABLES_PHASOR
 #define CDSP_PRIMITIVES_TABLES_PHASOR
 
-#include "tables_base.hpp"
+#include "../primitive_base.hpp"
+#include "table_abstract.hpp"
 
-namespace cdsp { namespace primitives { namespace tables { namespace phasor {
-	class base : public tables::base {
+namespace cdsp { namespace primitive { namespace table { namespace phasor {
+	class base :	public primitive::base,
+					public table::abstract
+	{
 	public:
 		base();
 

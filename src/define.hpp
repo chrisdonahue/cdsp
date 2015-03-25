@@ -1,5 +1,5 @@
-#ifndef CDSP_DEFINES
-#define CDSP_DEFINES
+#ifndef CDSP_DEFINE
+#define CDSP_DEFINE
 
 // DEBUG FLAG
 #define CDSP_DEBUG_API

@@ -9,6 +9,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "test_runge_kutta", "..\test
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "test_interpolate_linear", "..\test_linear_envelope\test_linear_envelope.vcxproj", "{05750B5E-86E1-4CAA-AB3F-248B506D1BA3}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "test_table_phasor", "..\test_table_phasor\test_table_phasor.vcxproj", "{B3B69D43-373A-4698-84CC-3D14C9280A9F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -31,6 +33,10 @@ Global
 		{05750B5E-86E1-4CAA-AB3F-248B506D1BA3}.Debug|Win32.Build.0 = Debug|Win32
 		{05750B5E-86E1-4CAA-AB3F-248B506D1BA3}.Release|Win32.ActiveCfg = Release|Win32
 		{05750B5E-86E1-4CAA-AB3F-248B506D1BA3}.Release|Win32.Build.0 = Release|Win32
+		{B3B69D43-373A-4698-84CC-3D14C9280A9F}.Debug|Win32.ActiveCfg = Debug|Win32
+		{B3B69D43-373A-4698-84CC-3D14C9280A9F}.Debug|Win32.Build.0 = Debug|Win32
+		{B3B69D43-373A-4698-84CC-3D14C9280A9F}.Release|Win32.ActiveCfg = Release|Win32
+		{B3B69D43-373A-4698-84CC-3D14C9280A9F}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

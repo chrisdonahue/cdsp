@@ -1,7 +1,7 @@
 #ifndef CDSP_EXCEPTIONS
 #define CDSP_EXCEPTIONS
 
-#include "defines.hpp"
+#include "define.hpp"
 
 #ifdef CDSP_WIN
 #include <assert.h>
@@ -15,7 +15,7 @@
 namespace cdsp {
 	extern void ensure(types::boolean assertion);
 
-	namespace exceptions {
+	namespace exception {
 		class base : public std::runtime_error {
 		public:
 			base(const std::string& msg) : std::runtime_error(msg) {};

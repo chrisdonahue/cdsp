@@ -42,7 +42,7 @@ int main(int argc, char* argv[])
 	for (int i = 1; i < n; i++) {
 		x = x0 + dx * (i - 1);
 		*y = *(y - 1);
-		helpers::runge_kutta_4(buffer_derivatives, state_num, &x, y_t, dx, y);
+		helper::runge_kutta_4(buffer_derivatives, state_num, &x, y_t, dx, y);
 		y++;
 	}
  

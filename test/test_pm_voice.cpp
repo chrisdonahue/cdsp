@@ -14,7 +14,7 @@ int main(int argc, char* argv[])
 	// create wavetable
 	types::index table_length = 1024;
 	sample_buffer table(1, table_length);
-	helpers::generators::sine(table_length, table.channel_pointer_write(0));
+	helper::generator::sine(table_length, table.channel_pointer_write(0));
 
 	// create pm_voice
 	abstraction::pm_voice pm_voice_1;
@@ -56,7 +56,7 @@ int main(int argc, char* argv[])
 	output_buffer.resize(1, output_buffer_length);
 
 	// save
-	helpers::io::wav_file_save("pm_voice_1_test.wav", sample_rate, 32, output_buffer);
+	helper::io::wav_file_save("pm_voice_1_test.wav", sample_rate, 32, output_buffer);
 
 	// release
 	pm_voice_1.release();

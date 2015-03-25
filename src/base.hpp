@@ -9,8 +9,8 @@
 
 #include <assert.h>
 
-#include "defines.hpp"
-#include "exceptions.hpp"
+#include "define.hpp"
+#include "exception.hpp"
 #include "sample_buffer.hpp"
 #include "types.hpp"
 

@@ -1,22 +1,22 @@
 #include "table_phasor.hpp"
 
 /*
-	cdsp::primitives::tables::phasor::base
+	cdsp::primitive::table::phasor::base
 */
 
-cdsp::primitives::tables::phasor::base::base() :
-	tables::base()
+cdsp::primitive::table::phasor::base::base() :
+	table::abstract()
 {
 	channels_input_num_set(1);
 	channels_output_num_set(1);
 };
 
-void cdsp::primitives::tables::phasor::base::table_set(types::index _table_length, const types::cont_32* _table) {
-	tables::base::table_set(_table_length, _table);
+void cdsp::primitive::table::phasor::base::table_set(types::index _table_length, const types::cont_32* _table) {
+	table::abstract::table_set(_table_length, _table);
 
 #ifdef CDSP_DEBUG
-	if (!cdsp::helpers::is_power_of_two(_table_length)) {
-		throw cdsp::exceptions::runtime("cdsp::primitives::oscillators::table_interpolate_4: table_set called with a table_size that was not a power of two");
+	if (!cdsp::helper::is_power_of_two(_table_length)) {
+		throw cdsp::exception::runtime("provided table length is not a power of two");
 	}
 #endif
 
@@ -25,14 +25,14 @@ void cdsp::primitives::tables::phasor::base::table_set(types::index _table_lengt
 };
 
 /*
-	cdsp::primitives::tables::phasor::interpolate_4
+	cdsp::primitive::table::phasor::interpolate_4
 */
 
-cdsp::primitives::tables::phasor::interpolate_4::interpolate_4() :
+cdsp::primitive::table::phasor::interpolate_4::interpolate_4() :
 	base()
 {};
 
-void cdsp::primitives::tables::phasor::interpolate_4::perform(sample_buffer& buffer, types::disc_32_u block_size_leq, types::channel offset_channel, types::index offset_sample) {
+void cdsp::primitive::table::phasor::interpolate_4::perform(sample_buffer& buffer, types::disc_32_u block_size_leq, types::channel offset_channel, types::index offset_sample) {
 	base::perform(buffer, block_size_leq, offset_channel, offset_sample);
 
 	// create state

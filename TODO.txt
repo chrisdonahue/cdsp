@@ -34,3 +34,23 @@ parameter:
 		rate_block<T>
 		rate_audio
 			signal
+
+tables:
+	tables_base
+		table_oscillator
+			tab_osc_4
+			tab_osc_2
+			tab_osc_1
+		table_function
+			table_function_cyclic
+				tab_fun_cyc_4
+				tab_fun_cyc_2
+				tab_fun_cyc_1
+			table_function_acyclic
+				tab_fun_acyc_4
+				tab_fun_acyc_2
+				tab_fun_acyc_1
+
+envelopes:
+
+operators:

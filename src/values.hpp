@@ -1,9 +1,9 @@
-#ifndef CDSP_VALUES
-#define CDSP_VALUES
+#ifndef CDSP_VALUE
+#define CDSP_VALUE
 
 #include <limits>
 
-#include "defines.hpp"
+#include "define.hpp"
 #include "types.hpp"
 
 #ifdef min

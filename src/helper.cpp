@@ -1,6 +1,6 @@
-#include "helpers.hpp"
+#include "helper.hpp"
 
-cdsp::types::disc_32_u cdsp::helpers::two_to_n(types::disc_32_u n) {
+cdsp::types::disc_32_u cdsp::helper::two_to_n(types::disc_32_u n) {
 	if (n == 0) {
 		return 1;
 	}
@@ -8,14 +8,14 @@ cdsp::types::disc_32_u cdsp::helpers::two_to_n(types::disc_32_u n) {
 	return 1 << n;
 };
 
-cdsp::types::boolean cdsp::helpers::is_power_of_two(types::disc_32_u n) {
+cdsp::types::boolean cdsp::helper::is_power_of_two(types::disc_32_u n) {
 	n;
 	return true;
 };
 
-void cdsp::helpers::generators::sinusoid_sum(std::set<std::tuple<types::cont_64, types::cont_64, types::cont_64> > partials, types::disc_32_u buffer_length, types::sample* buffer) {
+void cdsp::helper::generator::sinusoid_sum(std::set<std::tuple<types::cont_64, types::cont_64, types::cont_64> > partials, types::disc_32_u buffer_length, types::sample* buffer) {
 	if (buffer_length == 0) {
-		throw exceptions::runtime("cdsp::helpers::sine_sum: buffer_length is 0");
+		throw exception::runtime("cdsp::helper::sine_sum: buffer_length is 0");
 	}
 
 	// clear
@@ -52,22 +52,22 @@ void cdsp::helpers::generators::sinusoid_sum(std::set<std::tuple<types::cont_64,
 	}
 }
 
-void cdsp::helpers::generators::sinusoid(types::disc_32_u buffer_length, types::sample* buffer, types::cont_64 frequency, types::cont_64 amplitude, types::cont_64 phase) {
+void cdsp::helper::generator::sinusoid(types::disc_32_u buffer_length, types::sample* buffer, types::cont_64 frequency, types::cont_64 amplitude, types::cont_64 phase) {
 	std::set<std::tuple<types::cont_64, types::cont_64, types::cont_64> > partials;
 	partials.insert(std::make_tuple(frequency, amplitude, phase));
 
 	sinusoid_sum(partials, buffer_length, buffer);
 }
 
-void cdsp::helpers::generators::sine(types::disc_32_u buffer_length, types::sample* buffer) {
+void cdsp::helper::generator::sine(types::disc_32_u buffer_length, types::sample* buffer) {
 	sinusoid(buffer_length, buffer, values::one_64, values::one_64, static_cast<types::cont_64>(-0.25));
 }
 
-void cdsp::helpers::generators::cosine(types::disc_32_u buffer_length, types::sample* buffer) {
+void cdsp::helper::generator::cosine(types::disc_32_u buffer_length, types::sample* buffer) {
 	sinusoid(buffer_length, buffer, values::one_64, values::one_64, values::zero_64);
 }
 
-void cdsp::helpers::runge_kutta_4(types::sample* buffer_derivatives, types::index state_num, types::sample* buffer_params, void(*f)(types::sample*, const types::sample*, const types::sample*), types::sample h, types::sample* buffer_state) {
+void cdsp::helper::runge_kutta_4(types::sample* buffer_derivatives, types::index state_num, types::sample* buffer_params, void(*f)(types::sample*, const types::sample*, const types::sample*), types::sample h, types::sample* buffer_state) {
 	// buffer_derivatives must be length (5*param_num)
 	types::sample* deriv1 = buffer_derivatives;
 	types::sample* deriv2 = deriv1 + state_num;
@@ -100,7 +100,7 @@ void write(std::ofstream& stream, const T& t) {
 	stream.write((const char*)&t, sizeof(T));
 }
 
-void cdsp::helpers::io::wav_file_save(std::string file_path, types::cont_64 sample_rate, types::disc_32_u sample_bit_depth, sample_buffer& buffer, types::channel channel) {
+void cdsp::helper::io::wav_file_save(std::string file_path, types::cont_64 sample_rate, types::disc_32_u sample_bit_depth, sample_buffer& buffer, types::channel channel) {
 	// TODO: use sample bit depth
 	sample_bit_depth;
 
