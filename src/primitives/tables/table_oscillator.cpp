@@ -11,7 +11,7 @@ cdsp::primitives::tables::oscillator::base::base() :
 {
 	channels_input_num_set(0);
 	channels_output_num_set(1);
-	parameter_plug_register("frequency");
+	parameter_register_pluggable("frequency");
 }
 
 cdsp::primitives::tables::oscillator::base::base(types::sample _phase_initial) :

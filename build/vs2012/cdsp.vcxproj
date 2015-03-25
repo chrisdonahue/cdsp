@@ -66,6 +66,7 @@
   <ItemGroup>
     <ClCompile Include="..\..\src\abstraction\pm_voice.cpp" />
     <ClCompile Include="..\..\src\base.cpp" />
+    <ClCompile Include="..\..\src\circular_buffer.cpp" />
     <ClCompile Include="..\..\src\exceptions.cpp" />
     <ClCompile Include="..\..\src\graph.cpp" />
     <ClCompile Include="..\..\src\helpers.cpp" />
@@ -89,6 +90,7 @@
     <ClInclude Include="..\..\src\abstraction\pm_voice.hpp" />
     <ClInclude Include="..\..\src\base.hpp" />
     <ClInclude Include="..\..\src\cdsp.hpp" />
+    <ClInclude Include="..\..\src\circular_buffer.hpp" />
     <ClInclude Include="..\..\src\defines.hpp" />
     <ClInclude Include="..\..\src\exceptions.hpp" />
     <ClInclude Include="..\..\src\graph.hpp" />

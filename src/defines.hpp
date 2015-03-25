@@ -2,26 +2,26 @@
 #define CDSP_DEFINES
 
 // DEBUG FLAG
-#define CDSP_DEBUG
+#define CDSP_DEBUG_API
+#define CDSP_DEBUG_INTERNAL
 #define CDSP_DEBUG_DSP
 
 // OS FLAGS
 #ifdef _WIN32
-#define CDSP_WIN
-#endif
-#ifdef _WIN64
-#define CDSP_WIN_64
-#else
-#define CDSP_WIN_32
-#endif
+	#define CDSP_WIN
+	#ifdef _WIN64
+		#define CDSP_WIN_64
+	#else
+		#define CDSP_WIN_32
+	#endif
 #elif __APPLE__
-#define CDSP_MAC
+	#define CDSP_MAC
 #elif __linux
-#define CDSP_LINUX
+	#define CDSP_LINUX
 #elif __unix
-#define CDSP_UNIX
+	#define CDSP_UNIX
 #elif __posix
-#define CDSP_POSIX
+	#define CDSP_POSIX
 #endif
 
 // SAMPLE BIT DEPTH FLAG

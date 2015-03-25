@@ -4,10 +4,9 @@
 #include "../primitives_base.hpp"
 
 namespace cdsp { namespace primitives { namespace tables {
-	class base : public primitives::base {
+	class base {
 	public:
-		base();
-
+		virtual ~base() = 0;
 		void table_set(types::index _table_length, const types::sample* _table);
 
 	protected:

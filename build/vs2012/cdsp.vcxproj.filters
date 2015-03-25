@@ -75,6 +75,9 @@
     <ClCompile Include="..\..\src\primitives\misc\fm_feedback.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\circular_buffer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\base.hpp">
@@ -147,6 +150,9 @@
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\primitives\misc\fm_feedback.hpp">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\circular_buffer.hpp">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>

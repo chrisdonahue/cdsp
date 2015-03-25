@@ -1,14 +1,9 @@
 short term:
-	exceptions.hpp
-		figure out how to print stack trace in C++
-	cdsp::circular_buffer
+	tables_base.hpp -> tables_interface.hpp
+		redo interface for most of these to avoid diamond issue (see notebook paper)
+	primitives_base.hpp (subclasses, add specifier to parameters.hpp)
 	parameters overhaul (see bottom) (circular buffer)
-	primitives overhaul:
-		all of these for rate_block<T> vs rate_linear:
-			parameter<T>& parameter_get_read(specifier)
-			const parameter<T>& parameter_get_write(specifier)
-			void parameter_register_read(specifier, const parameter&)
-			void parameter_register_write(specifier, parameter&)
+	cdsp::circular_buffer
 	envelopes overhaul (align with parameter) (can this be the same code as rate_audio?)
 	make interpolate framework a templated parameter to any table oscillator <interpolate::four, interpolate::two, interpolate::truncate>
 	graph.hpp

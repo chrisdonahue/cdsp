@@ -5,7 +5,9 @@
 #include "tables_base.hpp"
 
 namespace cdsp { namespace primitives { namespace tables { namespace oscillator {
-	class base : public tables::base {
+	class base :	public tables::base,
+					public primitives::parameterized_rate_audio_pluggable
+	{
 	public:
 		base();
 		base(types::sample _phase_initial);
