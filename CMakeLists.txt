@@ -33,15 +33,8 @@ if(GIT_EXECUTABLE)
     message("Git commit hash: ${CDSP_BUILD_HASH}")
 endif()
 
-#option(CDSP_WITH_SSL "Include SSL support (default OpenSSL, CyaSSL if CDSP_USE_CYASSL is set)" ON)
-#option(CDSP_SSL_CLIENT_USE_OS_CA_CERTS "SSL support should make use of OS installed CA root certs" ON)
-#option(CDSP_USE_EXTERNAL_ZLIB "Search the system for ZLib instead of using the included one (on Windows)" OFF)
-#option(CDSP_USE_CYASSL "Use CyaSSL replacement for OpenSSL. When settings this, you also need to specify CDSP_CYASSL_LIB and CDSP_CYASSL_INCLUDE_DIRS" OFF)
-#option(CDSP_WITHOUT_BUILTIN_GETIFADDRS "Don't use BSD getifaddrs implementation from libcdsp if it is missing (this will result in a compilation error) ... Default is your libc provides it. On some systems such as uclibc it doesn't exist." OFF)
-#option(CDSP_WITHOUT_CLIENT "Don't build the client part of the library" OFF)
-#option(CDSP_WITHOUT_SERVER "Don't build the server part of the library" OFF)
-#option(CDSP_LINK_TESTAPPS_DYNAMIC "Link the test apps to the shared version of the library. Default is to link statically" OFF)
-option(CDSP_WITHOUT_TESTAPPS "Don't build the cdsp-test-apps" OFF)
+option(CDSP_DEBUG_INTERNAL "Don't build the cdsp test apps" ON)
+option(CDSP_WITHOUT_TESTAPPS "Don't build the cdsp test apps" OFF)
 
 # Allow the user to override installation directories.
 set(CDSP_INSTALL_LIB_DIR       lib CACHE PATH "Installation directory for libraries")
@@ -166,7 +159,7 @@ endif()
 # Generate the config.h that includes all the compilation settings.
 configure_file(
        "${PROJECT_SOURCE_DIR}/config.h.cmake"
-       "${PROJECT_BINARY_DIR}/CDSP_config.h")
+       "${PROJECT_BINARY_DIR}/cdsp_config.h")
 
 if (MSVC)
 	# Turn off stupid microsoft security warnings.
@@ -231,7 +224,7 @@ add_library(cdsp STATIC
 			#${HDR_PRIVATE}
 			#${HDR_PUBLIC}
 			${SOURCES})
-add_library(cdsp SHARED
+add_library(cdsp_shared SHARED
 			#${HDR_PRIVATE}
 			#${HDR_PUBLIC}
 			${SOURCES})
@@ -423,30 +416,8 @@ endif()
 message("---------------------------------------------------------------------")
 message("  Settings:  (For more help do cmake -LH <srcpath>")
 message("---------------------------------------------------------------------")
-message(" CDSP_WITH_SSL = ${CDSP_WITH_SSL}  (SSL Support)")
-message(" CDSP_SSL_CLIENT_USE_OS_CA_CERTS = ${CDSP_SSL_CLIENT_USE_OS_CA_CERTS}")
-message(" CDSP_USE_CYASSL = ${CDSP_USE_CYASSL} (CyaSSL replacement for OpenSSL)")
-if (CDSP_USE_CYASSL)
-	message("   CDSP_CYASSL_LIB = ${CDSP_CYASSL_LIB}")
-	message("   CDSP_CYASSL_INCLUDE_DIRS = ${CDSP_CYASSL_INCLUDE_DIRS}")
-endif()
-message(" CDSP_WITHOUT_BUILTIN_GETIFADDRS = ${CDSP_WITHOUT_BUILTIN_GETIFADDRS}")
-message(" CDSP_WITHOUT_CLIENT = ${CDSP_WITHOUT_CLIENT}")
-message(" CDSP_WITHOUT_SERVER = ${CDSP_WITHOUT_SERVER}")
-message(" CDSP_LINK_TESTAPPS_DYNAMIC = ${CDSP_LINK_TESTAPPS_DYNAMIC}")
+message(" CDSP_DEBUG_INTERNAL = ${CDSP_DEBUG_INTERNAL}")
 message(" CDSP_WITHOUT_TESTAPPS = ${CDSP_WITHOUT_TESTAPPS}")
-message(" CDSP_WITHOUT_TEST_SERVER = ${CDSP_WITHOUT_TEST_SERVER}")
-message(" CDSP_WITHOUT_TEST_SERVER_EXTPOLL = ${CDSP_WITHOUT_TEST_SERVER_EXTPOLL}")
-message(" CDSP_WITHOUT_TEST_PING = ${CDSP_WITHOUT_TEST_PING}")
-message(" CDSP_WITHOUT_TEST_CLIENT = ${CDSP_WITHOUT_TEST_CLIENT}")
-message(" CDSP_WITHOUT_TEST_FRAGGLE = ${CDSP_WITHOUT_TEST_FRAGGLE}")
-message(" CDSP_WITHOUT_DEBUG = ${CDSP_WITHOUT_DEBUG}")
-message(" CDSP_WITHOUT_EXTENSIONS = ${CDSP_WITHOUT_EXTENSIONS}")
-message(" CDSP_WITH_LATENCY = ${CDSP_WITH_LATENCY}")
-message(" CDSP_WITHOUT_DAEMONIZE = ${CDSP_WITHOUT_DAEMONIZE}")
-message(" CDSP_USE_LIBEV = ${CDSP_USE_LIBEV}")
-message(" CDSP_IPV6 = ${CDSP_IPV6}")
-message(" CDSP_WITH_HTTP2 = ${CDSP_WITH_HTTP2}")
 message("---------------------------------------------------------------------")
 
 # These will be available to parent projects including libcdsp using add_subdirectory()
