@@ -1,16 +1,12 @@
 short term:
-	tables_base.hpp -> tables_interface.hpp
-		redo interface for most of these to avoid diamond issue (see notebook paper)
-	primitives_base.hpp (subclasses, add specifier to parameters.hpp)
-	parameters overhaul (see bottom) (circular buffer)
-	cdsp::circular_buffer
+	expose value_next api to parameter::rate_audio
+	cdsp::circular_buffer for envelopes
 	envelopes overhaul (align with parameter) (can this be the same code as rate_audio?)
-	make interpolate framework a templated parameter to any table oscillator <interpolate::four, interpolate::two, interpolate::truncate>
+	make interpolate code a macro
 	graph.hpp
 	create README.md
 
 long term:
-	remove pluralism on namespace/folder names
 	move hpp stuff to cpp
 	cmake project for cross platform (library for static linking)
 	test on mac, linux, ARM

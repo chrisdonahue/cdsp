@@ -14,6 +14,8 @@ namespace cdsp { namespace primitive { namespace table {
 		types::index table_length;
 		const types::sample* table;
 	};
+
+	inline abstract::~abstract() {};
 }}}
 
 #endif

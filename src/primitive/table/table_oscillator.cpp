@@ -100,7 +100,6 @@ void cdsp::primitive::table::oscillator::interpolate_4::perform(perform_signatur
 	base::perform(perform_arguments);
 
 	// get parameter values
-	;
 	const types::sample* frequency_buffer;
 	if (parameter_plugged("frequency")) {
 		parameter::rate_audio::signal& frequency_plug = parameter_plugged_get("frequency");

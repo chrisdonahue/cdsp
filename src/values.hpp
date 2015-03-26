@@ -55,6 +55,8 @@ namespace cdsp { namespace values {
 	const types::boolean boolean_true			= static_cast<types::boolean>(true);
 	const types::boolean boolean_false			= static_cast<types::boolean>(false);
 
+	const types::time time_zero					= static_cast<types::time>(0.0);
+
 #ifdef CDSP_SAMPLE_32
 	const types::sample sample_zero				= static_cast<types::sample>(0.0f);
 	const types::sample sample_one				= static_cast<types::sample>(1.0f);

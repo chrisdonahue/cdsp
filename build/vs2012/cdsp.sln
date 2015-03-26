@@ -3,13 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Express 2012 for Windows Desktop
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "cdsp", "cdsp.vcxproj", "{9345C55E-91F9-4A83-9B18-0359E5B8DB6B}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "test_fm_voice", "..\test_fm_voice\test_fm_voice.vcxproj", "{6BE566B0-FBAB-49E8-8D7B-4C58567F3CC3}"
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "test_runge_kutta", "..\test_runge_kutta\test_runge_kutta.vcxproj", "{A25F9B8A-5EB6-40F2-9797-024900B6230F}"
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "test_interpolate_linear", "..\test_linear_envelope\test_linear_envelope.vcxproj", "{05750B5E-86E1-4CAA-AB3F-248B506D1BA3}"
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "test_table_phasor", "..\test_table_phasor\test_table_phasor.vcxproj", "{B3B69D43-373A-4698-84CC-3D14C9280A9F}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "test_table_oscillator", "..\test_table_oscillator\test_table_oscillator.vcxproj", "{F0EA38D9-0DEB-4F07-9644-0F8B9C877055}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,22 +15,10 @@ Global
 		{9345C55E-91F9-4A83-9B18-0359E5B8DB6B}.Debug|Win32.Build.0 = Debug|Win32
 		{9345C55E-91F9-4A83-9B18-0359E5B8DB6B}.Release|Win32.ActiveCfg = Release|Win32
 		{9345C55E-91F9-4A83-9B18-0359E5B8DB6B}.Release|Win32.Build.0 = Release|Win32
-		{6BE566B0-FBAB-49E8-8D7B-4C58567F3CC3}.Debug|Win32.ActiveCfg = Debug|Win32
-		{6BE566B0-FBAB-49E8-8D7B-4C58567F3CC3}.Debug|Win32.Build.0 = Debug|Win32
-		{6BE566B0-FBAB-49E8-8D7B-4C58567F3CC3}.Release|Win32.ActiveCfg = Release|Win32
-		{6BE566B0-FBAB-49E8-8D7B-4C58567F3CC3}.Release|Win32.Build.0 = Release|Win32
-		{A25F9B8A-5EB6-40F2-9797-024900B6230F}.Debug|Win32.ActiveCfg = Debug|Win32
-		{A25F9B8A-5EB6-40F2-9797-024900B6230F}.Debug|Win32.Build.0 = Debug|Win32
-		{A25F9B8A-5EB6-40F2-9797-024900B6230F}.Release|Win32.ActiveCfg = Release|Win32
-		{A25F9B8A-5EB6-40F2-9797-024900B6230F}.Release|Win32.Build.0 = Release|Win32
-		{05750B5E-86E1-4CAA-AB3F-248B506D1BA3}.Debug|Win32.ActiveCfg = Debug|Win32
-		{05750B5E-86E1-4CAA-AB3F-248B506D1BA3}.Debug|Win32.Build.0 = Debug|Win32
-		{05750B5E-86E1-4CAA-AB3F-248B506D1BA3}.Release|Win32.ActiveCfg = Release|Win32
-		{05750B5E-86E1-4CAA-AB3F-248B506D1BA3}.Release|Win32.Build.0 = Release|Win32
-		{B3B69D43-373A-4698-84CC-3D14C9280A9F}.Debug|Win32.ActiveCfg = Debug|Win32
-		{B3B69D43-373A-4698-84CC-3D14C9280A9F}.Debug|Win32.Build.0 = Debug|Win32
-		{B3B69D43-373A-4698-84CC-3D14C9280A9F}.Release|Win32.ActiveCfg = Release|Win32
-		{B3B69D43-373A-4698-84CC-3D14C9280A9F}.Release|Win32.Build.0 = Release|Win32
+		{F0EA38D9-0DEB-4F07-9644-0F8B9C877055}.Debug|Win32.ActiveCfg = Debug|Win32
+		{F0EA38D9-0DEB-4F07-9644-0F8B9C877055}.Debug|Win32.Build.0 = Debug|Win32
+		{F0EA38D9-0DEB-4F07-9644-0F8B9C877055}.Release|Win32.ActiveCfg = Release|Win32
+		{F0EA38D9-0DEB-4F07-9644-0F8B9C877055}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

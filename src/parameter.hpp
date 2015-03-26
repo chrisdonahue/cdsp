@@ -120,11 +120,11 @@ namespace cdsp { namespace parameter {
 
 	// this is horrible... explanation:
 		// i want cdsp::parameter::base::~base to be pure virtual (making the class abstract)
-		// i can't inline the declaration AND definition for a pure virtual function in GCC
+		// i can't have the declaration AND definition for a pure virtual function adjacent in GCC
 		// i can't define templated class methods in a cpp file without explicit type instantiation
 		// subclasses need base<T>::~base() to be defined for automatic inheritance
 		// therefore it has to be here!
-	template <typename T> base<T>::~base() {};
+	template <typename T> inline base<T>::~base() {};
 
 	namespace rate_block {
 		template <typename T>
@@ -145,7 +145,153 @@ namespace cdsp { namespace parameter {
 			base(types::sample value_initial) : parameter::base<types::sample>(value_initial), dsp() {};
 			base(types::sample value_min, types::sample value_max) : parameter::base<types::sample>(value_min, value_max), dsp() {};
 			base(types::sample value_initial, types::sample value_min, types::sample value_max) : parameter::base<types::sample>(value_initial, value_min, value_max), dsp() {};
+
+			virtual void schedule_ramp_linear(types::index sample_relative, types::sample value_at) = 0;
+			virtual void schedule_ramp_linear(types::time time_relative, types::sample value_at) = 0;
+			//virtual void schedule_ramp_exponential(types::index relative, types::sample value_at) = 0;
+
+		protected:
+			enum ramp_type {
+				linear,
+				exponential
+			};
+
+			struct ramp {
+				ramp_type type;
+				types::index sample_relative;
+				types::cont_64 value_at;
+			};
+
+		private:
 		};
+		
+		class schedule_static : public base {
+		public:
+			schedule_static() :
+				base(), schedule_n(1), schedule(nullptr)
+			{
+				schedule_alloc();
+			};
+
+			schedule_static(types::index _schedule_n) :
+				base(), schedule_n(_schedule_n), schedule(nullptr)
+			{
+				schedule_alloc();
+			};
+
+			schedule_static(types::index _schedule_n, types::sample value_initial) :
+				base(value_initial), schedule_n(_schedule_n), schedule(nullptr)
+			{
+				schedule_alloc();
+			};
+
+			schedule_static(types::index _schedule_n, types::sample value_min, types::sample value_max) :
+				base(value_min, value_max), schedule_n(_schedule_n), schedule(nullptr)
+			{
+				schedule_alloc();
+			};
+
+			schedule_static(types::index _schedule_n, types::sample value_initial, types::sample value_min, types::sample value_max) :
+				base(value_initial, value_min, value_max), schedule_n(_schedule_n), schedule(nullptr)
+			{
+				schedule_alloc();
+			};
+
+			~schedule_static()
+			{
+				schedule_free();
+			};
+
+			void schedule_resize(types::index _schedule_n) {
+				if (_schedule_n != schedule_n) {
+					schedule_n = _schedule_n;
+					schedule_free();
+					schedule_alloc();
+				}
+			};
+
+
+			// REDO THIS WITH FIXED LENGTH LINKED LIST
+			//virtual void schedule_ramp_linear(types::time relative, types::sample value_at) = 0;
+			void schedule_ramp_linear(types::index sample_relative, types::sample value_at) {
+				// determine position
+				types::index ramp_new_destination = 0;
+				ramp* ramp_current = schedule;
+				while (ramp_new_destination < scheduled && ramp_current->sample_relative < sample_relative) {
+					ramp_current = schedule + (ramp_new_destination++);
+				}
+
+				// reject schedule if its beyond the boundaries
+				if (ramp_new_destination >= schedule_n) {
+#ifdef CDSP_DEBUG_API
+					throw cdsp::exception::runtime("attempted to schedule a ramp value when n were already scheduled");
+#endif
+					return;
+				}
+
+				// put new ramp on stack
+				ramp ramp_new;
+				ramp_new.type = ramp_type::linear;
+				ramp_new.sample_relative = sample_relative;
+				ramp_new.value_at = value_at;
+
+				if (scheduled == schedule_n) {
+
+				}
+
+				// insert value if its within the boundaries
+				types::index shift = scheduled == schedule_n ? schedule_n - 2 : scheduled;
+				ramp* shift_ramp;
+				ramp* shift_ramp_dest;
+				while (shift >= ramp_new_destination) {
+					shift_ramp = schedule + shift;
+					shift_ramp_dest = schedule + shift + 1;
+
+					*shift_ramp = *shift_ramp_dest;
+					
+					shift--;
+				}
+
+				// insert ramp_new
+				*(schedule + ramp_new_destination) = ramp_new;
+			};
+
+			void schedule_ramp_linear(types::time time_relative, types::sample value_at) {
+#ifdef CDSP_DEBUG_DSP
+				if (!prepared) {
+					throw cdsp::exception::runtime("schedule_ramp_linear called with a time parameter before prepare");
+				}
+				if (time_relative < values::time_zero) {
+					throw cdsp::exception::runtime("schedule_ramp_linear called with a negative time parameter");
+				}
+#endif
+
+				schedule_ramp_linear(static_cast<types::index>(time_relative * sample_rate), value_at);
+			};
+
+		private:
+			inline void schedule_alloc() {
+				schedule = reinterpret_cast<ramp*>(malloc(sizeof(ramp) * schedule_n));
+			};
+
+			inline void schedule_free() {
+				if (schedule != nullptr) {
+					free(schedule);
+					schedule = nullptr;
+				}
+			};
+
+			types::index schedule_n;
+			ramp* schedule;
+			types::index scheduled;
+		};
+
+		/*
+		class schedule_dynamic : public base {
+		public:
+		private:
+		};
+		*/
 
 		class ramp_linear : public base {
 		public:

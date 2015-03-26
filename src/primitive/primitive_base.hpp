@@ -82,7 +82,7 @@ namespace cdsp { namespace primitive {
 			}
 #endif
 
-			return it->second;
+			return *(it->second);
 		};
 
 	protected:
@@ -112,7 +112,19 @@ namespace cdsp { namespace primitive {
 				it.second->release();
 			}
 		};
-		virtual void perform(perform_signature_defaults) = 0;
+
+		parameter::rate_audio::base& parameter_get(types::string parameter_specifier) {
+			auto it = parameters_rate_audio.find(parameter_specifier);
+			types::boolean parameter_specifier_exposeed = it != parameters_rate_audio.end();
+
+#ifdef CDSP_DEBUG_API
+			if (!parameter_specifier_exposeed) {
+				throw cdsp::exception::runtime("no audio-rate parameter with this specifier was registered by this primitive");
+			}
+#endif
+
+			return *(it->second);
+		};
 
 	protected:
 		void parameter_expose(types::string parameter_specifier, parameter::rate_audio::base& parameter) {
@@ -141,7 +153,6 @@ namespace cdsp { namespace primitive {
 				it.second->release();
 			}
 		};
-		virtual void perform(perform_signature_defaults) = 0;
 
 		// TODO: have this return an iterator
 		const std::set<types::string>& parameter_specifiers_pluggable_get() {
