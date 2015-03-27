@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 2.8)
 
-project(cdsp C)
+project(cdsp)
 
 set(PACKAGE "cdsp")
 set(CPACK_PACKAGE_NAME "${PACKAGE}")
@@ -33,34 +33,16 @@ if(GIT_EXECUTABLE)
     message("Git commit hash: ${CDSP_BUILD_HASH}")
 endif()
 
+# Options
+option(CDSP_BUILD_SHARED "Build shared library" ON)
 option(CDSP_DEBUG_INTERNAL "Don't build the cdsp test apps" ON)
-option(CDSP_WITHOUT_TESTAPPS "Don't build the cdsp test apps" OFF)
+option(CDSP_BUILD_TESTS "Don't build the cdsp test apps" ON)
 
-# Allow the user to override installation directories.
-set(CDSP_INSTALL_LIB_DIR       lib CACHE PATH "Installation directory for libraries")
-set(CDSP_INSTALL_BIN_DIR       bin CACHE PATH "Installation directory for executables")
-set(CDSP_INSTALL_INCLUDE_DIR   include CACHE PATH "Installation directory for header files")
-set(CDSP_INSTALL_EXAMPLES_DIR  bin CACHE PATH "Installation directory for example files")
-
-#if (CDSP_WITHOUT_CLIENT AND CDSP_WITHOUT_SERVER)
-#	message(FATAL_ERROR "Makes no sense to compile without both client or server.")
-#endif()
-
-#if (CDSP_WITHOUT_DEBUG)
-	#set(_DEBUG 0)
-#else()
-	#set(_DEBUG 1)
-#endif()
-
-if (MINGW)
-	set(CDSP_MINGW_SUPPORT 1)
-endif()
-
+# Include directories
 include_directories("${PROJECT_BINARY_DIR}")
 
+# Fix inline
 include(CheckCSourceCompiles)
-
-# Check for different inline keyword versions.
 foreach(KEYWORD "inline" "__inline__" "__inline")
 	set(CMAKE_REQUIRED_DEFINITIONS "-DKEYWORD=${KEYWORD}")
 	CHECK_C_SOURCE_COMPILES(
@@ -79,66 +61,23 @@ if (NOT HAVE_inline)
 	endif()
 endif()
 
-# Put the libaries and binaries that get built into directories at the
-# top of the build tree rather than in hard-to-find leaf directories. 
-SET(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/bin")
-SET(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/lib")
-SET(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/lib")
-
-# Put absolute path of dynamic libraries into the object code. Some
-# architectures, notably Mac OS X, need this.
-SET(CMAKE_INSTALL_NAME_DIR "${CMAKE_INSTALL_PREFIX}/${CDSP_INSTALL_LIB_DIR}${LIB_SUFFIX}")
-
 # So we can include the CMake generated config file only when
 # building with CMAKE.
 add_definitions(-DCMAKE_BUILD)
 
+# Check system compatibilities
 include(CheckFunctionExists)
 include(CheckIncludeFile)
 include(CheckIncludeFiles)
 include(CheckLibraryExists)
 include(CheckTypeSize)
 
-CHECK_FUNCTION_EXISTS(bzero HAVE_BZERO)
-CHECK_FUNCTION_EXISTS(fork HAVE_FORK)
-CHECK_FUNCTION_EXISTS(getenv HAVE_GETENV)
 CHECK_FUNCTION_EXISTS(malloc HAVE_MALLOC)
 CHECK_FUNCTION_EXISTS(memset HAVE_MEMSET)
 CHECK_FUNCTION_EXISTS(realloc HAVE_REALLOC)
-CHECK_FUNCTION_EXISTS(socket HAVE_SOCKET)
-CHECK_FUNCTION_EXISTS(strerror HAVE_STRERROR)
-CHECK_FUNCTION_EXISTS(vfork HAVE_VFORK)
-CHECK_FUNCTION_EXISTS(getifaddrs HAVE_GETIFADDRS)
 
-if (NOT HAVE_GETIFADDRS)
-	if (CDSP_WITHOUT_BUILTIN_GETIFADDRS)
-		message(FATAL_ERROR "No getifaddrs was found on the system. Turn off the CDSP_WITHOUT_BUILTIN_GETIFADDRS compile option to use the supplied BSD version.")
-	endif()
-
-	set(CDSP_BUILTIN_GETIFADDRS 1)
-endif()
-
-CHECK_INCLUDE_FILE(dlfcn.h HAVE_DLFCN_H)
-CHECK_INCLUDE_FILE(fcntl.h HAVE_FCNTL_H)
-CHECK_INCLUDE_FILE(in6addr.h HAVE_IN6ADDR_H)
-CHECK_INCLUDE_FILE(inttypes.h HAVE_INTTYPES_H)
-CHECK_INCLUDE_FILE(memory.h HAVE_MEMORY_H)
-CHECK_INCLUDE_FILE(netinet/in.h HAVE_NETINET_IN_H)
-CHECK_INCLUDE_FILE(stdint.h HAVE_STDINT_H)
 CHECK_INCLUDE_FILE(stdlib.h HAVE_STDLIB_H)
-CHECK_INCLUDE_FILE(strings.h HAVE_STRINGS_H)
 CHECK_INCLUDE_FILE(string.h HAVE_STRING_H)
-CHECK_INCLUDE_FILE(sys/prctl.h HAVE_SYS_PRCTL_H)
-CHECK_INCLUDE_FILE(sys/socket.h HAVE_SYS_SOCKET_H)
-CHECK_INCLUDE_FILE(sys/stat.h HAVE_SYS_STAT_H)
-CHECK_INCLUDE_FILE(sys/types.h HAVE_SYS_TYPES_H)
-CHECK_INCLUDE_FILE(unistd.h HAVE_UNISTD_H)
-CHECK_INCLUDE_FILE(vfork.h HAVE_VFORK_H)
-CHECK_INCLUDE_FILE(zlib.h HAVE_ZLIB_H)
-
-# TODO: These can be tested if they actually work also...
-set(HAVE_WORKING_FORK HAVE_FORK)
-set(HAVE_WORKING_VFORK HAVE_VFORK)
 
 CHECK_INCLUDE_FILES("stdlib.h;stdarg.h;string.h;float.h" STDC_HEADERS)
 
@@ -166,7 +105,7 @@ if (MSVC)
 	#add_definitions(-D_CRT_SECURE_NO_DEPRECATE -D_CRT_NONSTDC_NO_DEPRECATE)
 endif(MSVC)
 
-include_directories("${PROJECT_SOURCE_DIR}/lib")
+include_directories("${PROJECT_SOURCE_DIR}/src")
 
 # Group headers and sources.
 # Some IDEs use this for nicer file structure.
@@ -180,7 +119,30 @@ include_directories("${PROJECT_SOURCE_DIR}/lib")
 	#)
 
 set(SOURCES
-	src_flat/add.c
+	src/base.cpp
+	src/exception.cpp
+	src/helper.cpp
+	src/parameter.cpp
+	src/sample_buffer.cpp
+	src/primitive/primitive_base.cpp
+	src/primitive/table/table_abstract.cpp
+	src/primitive/table/table_oscillator.cpp
+)
+
+set(HEADERS
+	src/base.hpp
+	src/cdsp.hpp
+	src/define.hpp
+	src/exception.hpp
+	src/graph.hpp
+	src/helper.hpp
+	src/parameter.hpp
+	src/sample_buffer.hpp
+	src/types.hpp
+	src/values.hpp
+	src/primitive/primitive_base.hpp
+	src/primitive/table/table_abstract.hpp
+	src/primitive/table/table_oscillator.hpp
 )
 
 #if (NOT CDSP_WITHOUT_CLIENT)
@@ -221,12 +183,11 @@ source_group("Sources"          FILES ${SOURCES})
 # Create the lib.
 #
 add_library(cdsp STATIC
-			#${HDR_PRIVATE}
-			#${HDR_PUBLIC}
+			${HEADERS}
 			${SOURCES})
+			
 add_library(cdsp_shared SHARED
-			#${HDR_PRIVATE}
-			#${HDR_PUBLIC}
+			${HEADERS}
 			${SOURCES})
 
 if (WIN32)
@@ -266,7 +227,7 @@ endif()
 # Test applications
 #
 set(TEST_APP_LIST)
-if (NOT CDSP_WITHOUT_TESTAPPS)
+if (CDSP_BUILD_TESTS)
 	#
 	# Helper function for adding a test app.
 	#
@@ -275,18 +236,18 @@ if (NOT CDSP_WITHOUT_TESTAPPS)
 		set(TEST_SRCS ${MAIN_SRC})
 		set(TEST_HDR)
 
-		if (WIN32)
-			list(APPEND TEST_SRCS 
-				${WIN32_HELPERS_PATH}/getopt.c
-				${WIN32_HELPERS_PATH}/getopt_long.c
-				${WIN32_HELPERS_PATH}/gettimeofday.c
-			)
+		#if (WIN32)
+			#list(APPEND TEST_SRCS 
+			#	${WIN32_HELPERS_PATH}/getopt.c
+			#	${WIN32_HELPERS_PATH}/getopt_long.c
+			#	${WIN32_HELPERS_PATH}/gettimeofday.c
+			#)
 
-			list(APPEND TEST_HDR 
-				${WIN32_HELPERS_PATH}/getopt.h
-				${WIN32_HELPERS_PATH}/gettimeofday.h
-			)
-		endif(WIN32)
+			#list(APPEND TEST_HDR 
+			#	${WIN32_HELPERS_PATH}/getopt.h
+			#	${WIN32_HELPERS_PATH}/gettimeofday.h
+			#)
+		#endif(WIN32)
 
 		source_group("Headers Private"   FILES ${TEST_HDR})
 		source_group("Sources"   FILES ${TEST_SRCS})
@@ -316,7 +277,7 @@ if (NOT CDSP_WITHOUT_TESTAPPS)
 	endmacro()
 
 	# test apps
-	create_test_app(test-server "test/test_table_oscillator.cpp")
+	create_test_app(test_table_oscillator "test/test_table_oscillator.cpp")
 
 	# Data files for running the test server.
 	#set(TEST_SERVER_DATA
@@ -324,8 +285,9 @@ if (NOT CDSP_WITHOUT_TESTAPPS)
 	#	"${PROJECT_SOURCE_DIR}/test-server/leaf.jpg"
 	#	"${PROJECT_SOURCE_DIR}/test-server/libcdsp.org-logo.png"
 	#	"${PROJECT_SOURCE_DIR}/test-server/test.html")
-endif(NOT CDSP_WITHOUT_TESTAPPS)
+endif(CDSP_BUILD_TESTS)
 
+if (UNIX)
 # Generate and install pkgconfig.
 # (This is not indented, because the tabs will be part of the output)
 file(WRITE "${PROJECT_BINARY_DIR}/libcdsp.pc"
@@ -356,74 +318,18 @@ else()
   set(DEF_INSTALL_CMAKE_DIR lib/cmake/libcdsp)
 endif()
 
-set(CDSP_INSTALL_CMAKE_DIR ${DEF_INSTALL_CMAKE_DIR} CACHE PATH "Installation directory for CMake files")
-
-# Export targets (This is used for other CMake projects to easily find the libraries and include files).
-export(TARGETS cdsp cdsp_shared
-        FILE "${PROJECT_BINARY_DIR}/LibcdspTargets.cmake")
-export(PACKAGE libcdsp)
-
-# Generate the config file for the build-tree.
-set(CDSP__INCLUDE_DIRS 
-    "${PROJECT_SOURCE_DIR}/lib"
-    "${PROJECT_BINARY_DIR}")
-set(LIBcdsp_INCLUDE_DIRS ${CDSP__INCLUDE_DIRS} CACHE PATH "Libcdsp include directories")
-configure_file(${PROJECT_SOURCE_DIR}/cmake/LibcdspConfig.cmake.in
-                ${PROJECT_BINARY_DIR}/LibcdspConfig.cmake 
-                @ONLY)
-
-# Generate the config file for the installation tree.
-get_filename_component(CDSP_ABSOLUTE_INSTALL_CMAKE_DIR ${CDSP_INSTALL_CMAKE_DIR} ABSOLUTE)
-get_filename_component(CDSP_ABSOLUTE_INSTALL_INCLUDE_DIR ${CDSP_INSTALL_INCLUDE_DIR} ABSOLUTE)
-file(RELATIVE_PATH 
-    REL_INCLUDE_DIR 
-    "${CDSP_ABSOLUTE_INSTALL_CMAKE_DIR}"
-    "${CDSP_ABSOLUTE_INSTALL_INCLUDE_DIR}") # Calculate the relative directory from the cmake dir.
-
-# Note the EVENT_CMAKE_DIR is defined in JanssonConfig.cmake.in, 
-# we escape it here so it's evaluated when it is included instead
-# so that the include dirs are given relative to where the 
-# config file is located.
-set(CDSP__INCLUDE_DIRS 
-    "\${CDSP_CMAKE_DIR}/${REL_INCLUDE_DIR}") 
-configure_file(${PROJECT_SOURCE_DIR}/cmake/LibcdspConfig.cmake.in
-                ${PROJECT_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/LibcdspConfig.cmake 
-                @ONLY)
-
-# Generate version info for both build-tree and install-tree.
-configure_file(${PROJECT_SOURCE_DIR}/cmake/LibcdspConfigVersion.cmake.in
-                ${PROJECT_BINARY_DIR}/LibcdspConfigVersion.cmake 
-                @ONLY)
-
-set_target_properties(cdsp cdsp_shared 
-					PROPERTIES PUBLIC_HEADER "${HDR_PUBLIC}")
-
-# Install exports for the install-tree.
-install(EXPORT LibcdspTargets
-		DESTINATION "${CDSP_INSTALL_CMAKE_DIR}" COMPONENT dev)
-
-# build subdir is not part of sources
-set(CPACK_SOURCE_IGNORE_FILES $(CPACK_SOURCE_IGNORE_FILES) ".git" "build" "tgz" "tar.gz")
-
-# Most people are more used to "make dist" compared to "make package_source"
-add_custom_target(dist COMMAND "${CMAKE_MAKE_PROGRAM}" package_source)
-
-include(UseRPMTools)
-if (RPMTools_FOUND)
-	RPMTools_ADD_RPM_TARGETS(libcdsp libcdsp.spec)
-endif()
-
 message("---------------------------------------------------------------------")
 message("  Settings:  (For more help do cmake -LH <srcpath>")
 message("---------------------------------------------------------------------")
+message(" CDSP_BUILD_SHARED = ${CDSP_BUILD_SHARED}")
 message(" CDSP_DEBUG_INTERNAL = ${CDSP_DEBUG_INTERNAL}")
-message(" CDSP_WITHOUT_TESTAPPS = ${CDSP_WITHOUT_TESTAPPS}")
+message(" CDSP_BUILD_TESTS = ${CDSP_BUILD_TESTS}")
 message("---------------------------------------------------------------------")
 
 # These will be available to parent projects including libcdsp using add_subdirectory()
-set(LIBcdsp_LIBRARIES cdsp cdsp_shared CACHE STRING "cdsp libraries")
-set(LIBcdsp_LIBRARIES_STATIC cdsp CACHE STRING "cdsp static library")
-set(LIBcdsp_LIBRARIES_SHARED cdsp_shared CACHE STRING "cdsp shared library")
+set(LIBCDSP_LIBRARIES cdsp cdsp_shared CACHE STRING "cdsp libraries")
+set(LIBCDSP_LIBRARIES_STATIC cdsp CACHE STRING "cdsp static library")
+set(LIBCDSP_LIBRARIES_SHARED cdsp_shared CACHE STRING "cdsp shared library")
 
 # This must always be last!
 include(CPack)
