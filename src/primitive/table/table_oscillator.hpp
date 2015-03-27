@@ -6,7 +6,7 @@
 #include "../../helper.hpp"
 
 namespace cdsp { namespace primitive { namespace table { namespace oscillator {
-	class base :	public primitive::parameterized_rate_audio_pluggable,
+	class base :	public primitive::parameterized<parameter::rate_audio::schedule_ramp_static>,
 					public table::abstract
 	{
 	public:

@@ -65,6 +65,7 @@ namespace cdsp { namespace primitive {
 		void parameter_specifier_remove(types::string parameter_specifier) {
 
 		};
+
 	private:
 		std::set<types::string> parameter_specifiers;
 	};
@@ -75,11 +76,11 @@ namespace cdsp { namespace primitive {
 
 		P& parameter_get(types::string parameter_specifier) {
 			auto it = parameters_rate_block.find(parameter_specifier);
-			types::boolean parameter_specifier_exposeed = it != parameter_specifiers_pluggable.end();
+			types::boolean parameter_specifier_exposed = it != parameter_specifiers_pluggable.end();
 
 #ifdef CDSP_DEBUG_API
-			if (!parameter_specifier_exposeed) {
-				throw cdsp::exception::runtime("no block-rate parameter with this specifier was registered by this primitive");
+			if (!parameter_specifier_exposed) {
+				throw cdsp::exception::runtime("no parameter with this specifier was registered by this primitive");
 			}
 #endif
 
@@ -87,33 +88,21 @@ namespace cdsp { namespace primitive {
 		};
 
 	protected:
-		void parameter_expose(types::string parameter_specifier, parameter::rate_block::base<T>& parameter) {
+		void parameter_expose(types::string parameter_specifier, P& parameter) {
 			parameterized::parameter_specifier_expose(parameter_specifier);
-			parameters_rate_block.insert(std::make_pair(parameter_specifier, parameter));
+			parameters.insert(std::make_pair(parameter_specifier, parameter));
 		};
 
 	private:
-		std::unordered_map<types::string, P* > parameters_rate_block;
+		std::unordered_map<types::string, P* > parameters;
 	};
 
+	/*
 	class parameterized_rate_audio : public parameterized {
 	public:
 		parameterized_rate_audio() : parameterized() {};
 
 		// dsp
-		virtual void prepare(prepare_signature) {
-			parameterized::prepare(prepare_arguments);
-			for (auto it : parameters_rate_audio) {
-				it.second->prepare(prepare_arguments);
-			}
-		};
-		virtual void release() {
-			parameterized::release();
-			for (auto it : parameters_rate_audio) {
-				it.second->release();
-			}
-		};
-
 		parameter::rate_audio::base& parameter_get(types::string parameter_specifier) {
 			auto it = parameters_rate_audio.find(parameter_specifier);
 			types::boolean parameter_specifier_exposeed = it != parameters_rate_audio.end();
@@ -201,6 +190,7 @@ namespace cdsp { namespace primitive {
 		std::set<types::string> parameter_specifiers_pluggable;
 		std::unordered_map<types::string, parameter::rate_audio::signal* > parameters_rate_audio_plugged;
 	};
+	*/
 }}
 
 #endif
