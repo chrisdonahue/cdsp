@@ -26,8 +26,8 @@ namespace cdsp { namespace primitive { namespace table { namespace oscillator {
 		types::sample table_length_sample;
 
 		types::sample table_index;
-		parameter::rate_block::base<types::sample> phase_initial;
-		parameter::rate_audio::ramp_linear_automatic frequency;
+		parameter::rate_block<types::sample> phase_initial;
+		parameter::rate_audio::schedule_ramp_static frequency;
 	};
 
 	class interpolate_4 : public base {

@@ -36,6 +36,7 @@ namespace cdsp { namespace primitive {
 		types::channel channels_output_num_get() {
 			return channels_output_num;
 		};
+
 	protected:
 		void channels_input_num_set(types::channel _channels_input_num) {
 			channels_input_num = _channels_input_num;
@@ -49,30 +50,30 @@ namespace cdsp { namespace primitive {
 		types::channel channels_output_num;
 	};
 
-	class parameterized : public base {
-	public:
-		parameterized() : base() {};
-
+	// need this class as base class for parameterized otherwise each would contain a set of types::string
+	class _parameterized : public base {
+	protected:
 		// TODO: have this return an iterator
 		const std::set<types::string>& parameter_specifiers_get() {
 			return const_cast<std::set<types::string>& >(parameter_specifiers);
 		};
 
-	protected:
-		void parameter_specifier_expose(types::string parameter_specifier) {
-			parameter_specifiers.insert(parameter_specifier);
+		void parameter_specifier_add(types::string parameter_specifier) {
+
 		};
 
+		void parameter_specifier_remove(types::string parameter_specifier) {
+
+		};
 	private:
 		std::set<types::string> parameter_specifiers;
 	};
 
-	template <typename T>
-	class parameterized_rate_block : public parameterized {
-	public:
-		parameterized_rate_block() : parameterized() {};
+	template <class P>
+	class parameterized : virtual public _parameterized {
+		parameterized() : _parameterized() {};
 
-		parameter::rate_block::base<T>& parameter_get(types::string parameter_specifier) {
+		P& parameter_get(types::string parameter_specifier) {
 			auto it = parameters_rate_block.find(parameter_specifier);
 			types::boolean parameter_specifier_exposeed = it != parameter_specifiers_pluggable.end();
 
@@ -92,7 +93,7 @@ namespace cdsp { namespace primitive {
 		};
 
 	private:
-		std::unordered_map<types::string, parameter::rate_block::base<T>* > parameters_rate_block;
+		std::unordered_map<types::string, P* > parameters_rate_block;
 	};
 
 	class parameterized_rate_audio : public parameterized {

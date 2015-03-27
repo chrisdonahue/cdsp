@@ -8,7 +8,7 @@ cdsp::primitive::table::oscillator::base::base() :
 	primitive::parameterized_rate_audio_pluggable(),
 	table::abstract(),
 	phase_initial(values::sample_zero, values::sample_zero, values::sample_one),
-	frequency(values::sample_zero, values::sample_zero, values::sample_one)
+	frequency(static_cast<types::index>(1), values::sample_zero, values::sample_zero, values::sample_one)
 {
 	channels_input_num_set(0);
 	channels_output_num_set(1);
@@ -19,7 +19,7 @@ cdsp::primitive::table::oscillator::base::base() :
 cdsp::primitive::table::oscillator::base::base(types::sample _phase_initial) :
 	table::abstract(),
 	phase_initial(_phase_initial, values::sample_zero, values::sample_one),
-	frequency(values::sample_zero, values::sample_zero, values::sample_one)
+	frequency(static_cast<types::index>(1), values::sample_zero, values::sample_zero, values::sample_one)
 {
 	channels_input_num_set(0);
 	channels_output_num_set(1);
@@ -30,7 +30,7 @@ cdsp::primitive::table::oscillator::base::base(types::sample _phase_initial) :
 cdsp::primitive::table::oscillator::base::base(types::sample _phase_initial, types::sample _frequency) :
 	table::abstract(),
 	phase_initial(_phase_initial, values::sample_zero, values::sample_one),
-	frequency(_frequency, values::sample_zero, values::sample_one)
+	frequency(static_cast<types::index>(1), _frequency, values::sample_zero, values::sample_one)
 {
 	channels_input_num_set(0);
 	channels_output_num_set(1);
