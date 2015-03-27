@@ -126,17 +126,15 @@ namespace cdsp { namespace parameter {
 		// therefore it has to be here!
 	template <typename T> inline base<T>::~base() {};
 
-	namespace rate_block {
-		template <typename T>
-		class base : public parameter::base<T> {
-		public:
-			base() : parameter::base<T>() {};
-			base(T value_initial) : parameter::base<T>(value_initial) {};
-			base(T value_min, T value_max) : parameter::base<T>(value_min, value_max) {};
-			base(T value_initial, T value_min, T value_max) : parameter::base<T>(value_initial, value_min, value_max) {};
-			~base() {};
-		};
-	}
+	template <typename T>
+	class rate_block : public parameter::base<T> {
+	public:
+		rate_block() : parameter::base<T>() {};
+		rate_block(T value_initial) : parameter::base<T>(value_initial) {};
+		rate_block(T value_min, T value_max) : parameter::base<T>(value_min, value_max) {};
+		rate_block(T value_initial, T value_min, T value_max) : parameter::base<T>(value_initial, value_min, value_max) {};
+		~rate_block() {};
+	};
 	
 	namespace rate_audio {
 		class base : public parameter::base<types::sample>, public dsp {
@@ -145,61 +143,52 @@ namespace cdsp { namespace parameter {
 			base(types::sample value_initial) : parameter::base<types::sample>(value_initial), dsp() {};
 			base(types::sample value_min, types::sample value_max) : parameter::base<types::sample>(value_min, value_max), dsp() {};
 			base(types::sample value_initial, types::sample value_min, types::sample value_max) : parameter::base<types::sample>(value_initial, value_min, value_max), dsp() {};
-
-			virtual void schedule_ramp_linear(types::index sample_relative, types::sample value_at) = 0;
-			virtual void schedule_ramp_linear(types::time time_relative, types::sample value_at) = 0;
-			//virtual void schedule_ramp_exponential(types::index relative, types::sample value_at) = 0;
-
-		protected:
-			enum ramp_type {
-				linear,
-				exponential
-			};
-
-			struct ramp {
-				ramp_type type;
-				types::index sample_relative;
-				types::cont_64 value_at;
-			};
-
-		private:
 		};
-		
-		class schedule_static : public base {
+
+		class schedule_ramp : public base {
 		public:
-			schedule_static() :
+			schedule_ramp() :
 				base(), schedule_n(1), schedule(nullptr)
 			{
 				schedule_alloc();
 			};
 
-			schedule_static(types::index _schedule_n) :
+			schedule_ramp(types::index _schedule_n) :
 				base(), schedule_n(_schedule_n), schedule(nullptr)
 			{
 				schedule_alloc();
 			};
 
-			schedule_static(types::index _schedule_n, types::sample value_initial) :
+			schedule_ramp(types::index _schedule_n, types::sample value_initial) :
 				base(value_initial), schedule_n(_schedule_n), schedule(nullptr)
 			{
 				schedule_alloc();
 			};
 
-			schedule_static(types::index _schedule_n, types::sample value_min, types::sample value_max) :
+			schedule_ramp(types::index _schedule_n, types::sample value_min, types::sample value_max) :
 				base(value_min, value_max), schedule_n(_schedule_n), schedule(nullptr)
 			{
 				schedule_alloc();
 			};
 
-			schedule_static(types::index _schedule_n, types::sample value_initial, types::sample value_min, types::sample value_max) :
+			schedule_ramp(types::index _schedule_n, types::sample value_initial, types::sample value_min, types::sample value_max) :
 				base(value_initial, value_min, value_max), schedule_n(_schedule_n), schedule(nullptr)
 			{
 				schedule_alloc();
 			};
 
-			~schedule_static()
+			~schedule_ramp()
 			{
 				schedule_free();
+			};
+
+			void prepare(prepare_signature) {
+			};
+
+			void perform(perform_signature_defaults) {
+			};
+
+			void release() {
 			};
 
 			void schedule_resize(types::index _schedule_n) {
@@ -209,7 +198,6 @@ namespace cdsp { namespace parameter {
 					schedule_alloc();
 				}
 			};
-
 
 			// REDO THIS WITH FIXED LENGTH LINKED LIST
 			//virtual void schedule_ramp_linear(types::time relative, types::sample value_at) = 0;
@@ -248,7 +236,7 @@ namespace cdsp { namespace parameter {
 					shift_ramp_dest = schedule + shift + 1;
 
 					*shift_ramp = *shift_ramp_dest;
-					
+
 					shift--;
 				}
 
@@ -269,6 +257,20 @@ namespace cdsp { namespace parameter {
 				schedule_ramp_linear(static_cast<types::index>(time_relative * sample_rate), value_at);
 			};
 
+		protected:
+			enum ramp_type {
+				linear,
+				exponential
+			};
+
+			struct ramp {
+				ramp_type type;
+				types::index sample_relative;
+				types::cont_64 value_at;
+			};
+
+			types::index scheduled_num;
+
 		private:
 			inline void schedule_alloc() {
 				schedule = reinterpret_cast<ramp*>(malloc(sizeof(ramp) * schedule_n));
@@ -286,13 +288,68 @@ namespace cdsp { namespace parameter {
 			types::index scheduled;
 		};
 
-		/*
-		class schedule_dynamic : public base {
+		class schedule_ramp_static : public schedule_ramp {
 		public:
-		private:
+			schedule_ramp_static() : schedule_ramp() {};
+			schedule_ramp_static(types::index _schedule_n) : schedule_ramp() {};
+			schedule_ramp_static(types::index _schedule_n, types::sample value_initial) : schedule_ramp(_schedule_n, value_initial) {};
+			schedule_ramp_static(types::index _schedule_n, types::sample value_min, types::sample value_max) : schedule_ramp(_schedule_n, value_min, value_max) {};
+			schedule_ramp_static(types::index _schedule_n, types::sample value_initial, types::sample value_min, types::sample value_max) : schedule_ramp(_schedule_n, value_initial, value_min, value_max) {};
 		};
-		*/
 
+		class signal : public base {
+		public:
+			signal(types::channel _channel) : base() {
+				channel = _channel;
+				range_map = false;
+				parameter_m = values::sample_line_level;
+				parameter_b = values::sample_silence;
+			};
+
+			signal(types::channel _channel, types::sample signal_min, types::sample signal_max, types::sample parameter_min, types::sample parameter_max) : base(parameter_min, parameter_max) {
+				channel = _channel;
+				if (signal_min == parameter_min && signal_max == parameter_max) {
+					range_map = false;
+					parameter_m = values::sample_line_level;
+					parameter_b = values::sample_silence;
+				}
+				else {
+					range_map = true;
+					helper::range_map_linear(signal_min, signal_max, parameter_min, parameter_max, parameter_m, parameter_b);
+				}
+			};
+
+			~signal() {};
+
+			void perform(perform_signature_defaults) {
+				base::perform(perform_arguments);
+
+				if (range_map) {
+					types::sample* output = buffer.channel_pointer_write(channel, offset_sample);
+					while (block_size_leq--) {
+						*(output) = ((*output) * parameter_m) + parameter_b;
+						output++;
+					}
+				}
+			};
+
+			types::channel channel_get() {
+				return channel;
+			};
+
+			void channel_set(types::disc_32_u _channel) {
+				channel = _channel;
+			};
+
+		private:
+			types::channel channel;
+
+			types::boolean range_map;
+			types::sample parameter_m;
+			types::sample parameter_b;
+		};
+
+		/*
 		class ramp_linear : public base {
 		public:
 			ramp_linear() : base() {};
@@ -302,7 +359,7 @@ namespace cdsp { namespace parameter {
 
 			void perform(perform_signature_defaults) {
 				base::perform(perform_arguments);
-
+				*/
 	#ifdef CDSP_DEBUG_DSP
 				/*
 				if (value_range_valid_get()) {
@@ -318,6 +375,7 @@ namespace cdsp { namespace parameter {
 				}
 				*/
 	#endif
+		/*
 			};
 
 			void value_set(types::sample _value) {
@@ -458,57 +516,7 @@ namespace cdsp { namespace parameter {
 			sample_buffer buffer;
 
 			types::sample* dezipper_buffer;
-		};
-
-		class signal : public base {
-		public:
-			signal(types::channel _channel) : base() {
-				channel = _channel;
-				range_map = false;
-				parameter_m = values::sample_line_level;
-				parameter_b = values::sample_silence;
-			};
-			signal(types::channel _channel, types::sample signal_min, types::sample signal_max, types::sample parameter_min, types::sample parameter_max) : base(parameter_min, parameter_max) {
-				channel = _channel;
-				if (signal_min == parameter_min && signal_max == parameter_max) {
-					range_map = false;
-					parameter_m = values::sample_line_level;
-					parameter_b = values::sample_silence;
-				}
-				else {
-					range_map = true;
-					helper::range_map_linear(signal_min, signal_max, parameter_min, parameter_max, parameter_m, parameter_b);
-				}
-			};
-			~signal() {};
-
-			void perform(perform_signature_defaults) {
-				base::perform(perform_arguments);
-
-				if (range_map) {
-					types::sample* output = buffer.channel_pointer_write(channel, offset_sample);
-					while (block_size_leq--) {
-						*(output) = ((*output) * parameter_m) + parameter_b;
-						output++;
-					}
-				}
-			};
-
-			types::channel channel_get() {
-				return channel;
-			};
-
-			void channel_set(types::disc_32_u _channel) {
-				channel = _channel;
-			};
-
-		private:
-			types::channel channel;
-
-			types::boolean range_map;
-			types::sample parameter_m;
-			types::sample parameter_b;
-		};
+		};*/
 	}
 }}
 
