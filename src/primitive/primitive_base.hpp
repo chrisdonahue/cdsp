@@ -14,7 +14,6 @@
 namespace cdsp { namespace primitive {
 	class base : public dsp {
 	public:
-		// dsp
 		virtual void perform(perform_signature_defaults) = 0;
 
 		// channels
@@ -49,84 +48,7 @@ namespace cdsp { namespace primitive {
 		types::channel channels_output_num;
 	};
 
-	// need this class as base class for parameterized otherwise each would contain a set of types::string
-	class _parameterized : virtual public base {
-	public:
-		_parameterized() : base() {};
-		_parameterized(types::channel _channels_input_num, types::channel _channels_output_num) : base(_channels_input_num, _channels_output_num) {};
-
-		// TODO: have this return an iterator
-		const std::set<types::string>& parameter_specifiers_get() {
-			return const_cast<std::set<types::string>& >(parameter_specifiers);
-		};
-
-	protected:
-		void parameter_specifier_add(types::string parameter_specifier) {
-			parameter_specifiers.insert(parameter_specifier);
-		};
-
-		void parameter_specifier_remove(types::string parameter_specifier) {
-			// TODO
-		};
-
-	private:
-		std::set<types::string> parameter_specifiers;
-	};
-
-	template <class P>
-	class parameterized : virtual public _parameterized {
-	public:
-		parameterized() : _parameterized() {};
-		parameterized(types::channel _channels_input_num, types::channel _channels_output_num) : _parameterized(_channels_input_num, _channels_output_num) {};
-
-		virtual void prepare(prepare_signature) {
-			_parameterized::prepare(prepare_arguments);
-		};
-
-		virtual void release() {
-			_parameterized::release();
-		};
-
-		P& parameter_get(types::string parameter_specifier) {
-			auto it = parameters.find(parameter_specifier);
-			types::boolean parameter_specifier_exposed = it != parameters.end();
-
-#ifdef CDSP_DEBUG_API
-			if (!parameter_specifier_exposed) {
-				throw cdsp::exception::runtime("no parameter with this specifier was registered by this primitive");
-			}
-#endif
-
-			return *(it->second);
-		};
-
-	protected:
-		void parameter_expose(types::string parameter_specifier, P& parameter) {
-			parameter_specifier_add(parameter_specifier);
-			parameters.insert(std::make_pair(parameter_specifier, &parameter));
-		};
-
-	private:
-		std::unordered_map<types::string, P* > parameters;
-	};
-
-	template <>
-	void parameterized<cdsp::parameter::rate_audio::base>::prepare(prepare_signature) {
-		_parameterized::prepare(prepare_arguments);
-		for (auto it : parameters) {
-			it.second->prepare(prepare_arguments);
-		}
-	};
-
-	template <>
-	void cdsp::primitive::parameterized<cdsp::parameter::rate_audio::base>::release() {
-		parameterized::release();
-		for (auto it : parameters) {
-			it.second->release();
-		}
-	};
-
-	class pluggable : virtual public base {
+	class pluggable : public base {
 	public:
 		pluggable() : base() {};
 		pluggable(types::channel _channels_input_num, types::channel _channels_output_num) : base(_channels_input_num, _channels_output_num) {};

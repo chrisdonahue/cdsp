@@ -6,58 +6,97 @@
 #include "../../helper.hpp"
 
 namespace cdsp { namespace primitive { namespace table { namespace oscillator {
-	template <class frequency_parameter_type = parameter_scheduled_default>
-	class base :	public primitive::parameterized<parameter::rate_audio<types::sample> >, 
-					public primitive::parameterized<frequency_parameter_type>,
+	template <class frequency_parameter_type=parameter_scheduled_default>
+	class base :	public primitive::pluggable,
 					public table::abstract
 	{
 	public:
 		base() :
-			primitive::parameterized<parameter::rate_audio<types::sample> >(),
-			primitive::parameterized<frequency_parameter_type>(),
+			primitive::pluggable(0, 1),
 			table::abstract(),
-			phase(values::sample_zero, values::sample_zero, values::sample_one),
+			phase_initial(values::sample_zero, values::sample_zero, values::sample_one),
 			frequency(values::sample_zero, values::sample_zero, values::sample_one)
-		{
-			parameter_expose("phase", phase);
-			parameter_expose("frequency", frequency);
-		};
-		//base(types::sample _phase_initial);
-		//base(types::sample _phase_initial, types::sample _frequency);
+		{};
+
+		base(types::sample _phase) :
+			primitive::pluggable(0, 1),
+			table::abstract(),
+			phase_initial(_phase_initial, values::sample_zero, values::sample_one),
+			frequency(values::sample_zero, values::sample_zero, values::sample_one)
+		{};
+
+		base(types::sample _phase, types::sample _frequency) :
+			primitive::pluggable(0, 1),
+			table::abstract(),
+			phase_initial(_phase, values::sample_zero, values::sample_one),
+			frequency(_frequency, values::sample_zero, values::sample_one)
+		{};
+
+		~base() {};
 
 		void table_set(types::index _table_length, const types::sample* _table) {
 			table::abstract::table_set(_table_length, _table);
 
-#ifdef CDSP_DEBUG
-			if (!cdsp::helpers::is_power_of_two(_table_length)) {
-				throw cdsp::exceptions::runtime("cdsp::primitive::oscillators::table_interpolate_4: table_set called with a table_size that was not a power of two");
+#ifdef CDSP_DEBUG_API
+			if (!helpers::is_power_of_two(_table_length)) {
+				throw exception::runtime("table length that was not a power of two");
 			}
 #endif
 
 			table_mask = table_length - 1;
 			table_length_sample = static_cast<types::sample>(table_length);
-
 			phase_reset();
+		};
+		
+		void prepare(prepare_signature) {
+			primitive::pluggable::prepare(prepare_arguments);
+
+#ifdef CDSP_DEBUG_API
+			if (table == nullptr) {
+				throw cdsp::exception::runtime("prepare called before table_set");
+			}
+#endif
+			frequency.prepare(prepare_arguments);
+		};
+
+		void release() {
+			frequency.release();
 		};
 
 		virtual void perform(perform_signature_defaults) = 0;
+
+		void phase_reset() {
+#ifdef CDSP_DEBUG_API
+			if (table == nullptr) {
+				throw cdsp::exception::runtime("table not set");
+			}
+#endif
+			table_index = phase_initial.value_get() * table_length_sample;
+		};
+
+		void phase_initial_set(types::sample _phase_initial) {
+			phase_initial.value_set(_phase_initial);
+		};
+
+		frequency_parameter_type& frequency_parameter_get() {
+			return frequency;
+		};
 
 	protected:
 		types::index table_mask;
 		types::sample table_length_sample;
 
 		types::sample table_index;
-		parameter::rate_block<types::sample> phase;
 		parameter::rate_block<types::sample> phase_initial;
-		frequency_type frequency;
+		frequency_parameter_type frequency;
 	};
 
-	template <class frequency_type>
-	class interpolate_4 : public base<frequency_type> {
+	template <class frequency_parameter_type=parameter_scheduled_default>
+	class interpolate_4 : public base<frequency_parameter_type> {
 	public:
-		interpolate_4() : base<frequency_type>();
-		//interpolate_4(types::sample _phase);
-		//interpolate_4(types::sample _phase, types::sample _frequency);
+		interpolate_4() : base<frequency_parameter_type>();
+		interpolate_4(types::sample _phase) : base<frequency_parameter_type>(_phase);
+		interpolate_4(types::sample _phase, types::sample _frequency) : base<frequency_parameter_type>(_phase, _frequency);
 
 		void perform(perform_signature_defaults) {
 			base::perform(perform_arguments);

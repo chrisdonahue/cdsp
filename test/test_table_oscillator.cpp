@@ -18,7 +18,7 @@ int main(int argc, char* argv[])
 	helper::generator::sine(table_length, table.channel_pointer_write(0));
 
 	// create oscillator
-	primitive::table::oscillator::interpolate_4<parameter::rate_audio::schedule_ramp_dynamic> osc_1;
+	primitive::table::oscillator::interpolate_4<> osc_1(values::sample_zero, static_cast<types::sample>(440.0 / sample_rate));
 
 	// set table
 	osc_1.table_set(table_length, table.channel_pointer_read(0));
@@ -27,8 +27,7 @@ int main(int argc, char* argv[])
 	osc_1.prepare(sample_rate, block_size);
 
 	// set next
-	parameter::rate_audio::schedule_ramp_dynamic& osc_1_freq = osc_1.parameter_get("frequency");
-	//osc_1_freq.schedule_ramp_linear(1.0, static_cast<types::sample>(440.0 / sample_rate));
+	parameter::rate_audio::schedule_ramp_dynamic& osc_1_freq = osc_1.frequency_parameter_get();
 
 	// perform
 	types::index samples_remaining = output_buffer_length;

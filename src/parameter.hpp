@@ -10,7 +10,7 @@
 #include "types.hpp"
 #include "values.hpp"
 
-#define parameter_scheduled_default parameter::rate_audio::scheduler_ramp
+#define parameter_scheduled_default parameter::rate_audio::scheduler_ramp_dynamic
 
 namespace cdsp { namespace parameter {
 	template <typename T>
@@ -282,13 +282,13 @@ namespace cdsp { namespace parameter {
 			schedule_pq& schedule;
 		};
 
-		class schedule_ramp_dynamic : public scheduler_ramp {
+		class scheduler_ramp_dynamic : public scheduler_ramp {
 		public:
-			schedule_ramp_dynamic() : schedule_pq(&value), scheduler_ramp(schedule_pq) {};
-			schedule_ramp_dynamic(types::sample _value_initial) : schedule_pq(&value), scheduler_ramp(schedule_pq, _value_initial) {};
-			schedule_ramp_dynamic(types::sample value_min, types::sample value_max) : schedule_pq(&value), scheduler_ramp(schedule_pq, value_min, value_max) {};
-			schedule_ramp_dynamic(types::sample _value_initial, types::sample value_min, types::sample value_max) : schedule_pq(&value), scheduler_ramp(schedule_pq, _value_initial, value_min, value_max) {};
-			~schedule_ramp_dynamic() {};
+			scheduler_ramp_dynamic() : schedule_pq(&value), scheduler_ramp(schedule_pq) {};
+			scheduler_ramp_dynamic(types::sample _value_initial) : schedule_pq(&value), scheduler_ramp(schedule_pq, _value_initial) {};
+			scheduler_ramp_dynamic(types::sample value_min, types::sample value_max) : schedule_pq(&value), scheduler_ramp(schedule_pq, value_min, value_max) {};
+			scheduler_ramp_dynamic(types::sample _value_initial, types::sample value_min, types::sample value_max) : schedule_pq(&value), scheduler_ramp(schedule_pq, _value_initial, value_min, value_max) {};
+			~scheduler_ramp_dynamic() {};
 
 		private:
 			class schedule_pq_dynamic : public scheduler_ramp::schedule_pq {
