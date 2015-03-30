@@ -5,31 +5,30 @@
 */
 
 cdsp::primitive::table::oscillator::base::base() :
-	primitive::parameterized<parameter::rate_audio::schedule_ramp_static>(),
+	primitive::parameterized<parameter::rate_audio::schedule_ramp_static>(0, 1),
+	primitive::pluggable(0, 1),
 	table::abstract(),
 	phase_initial(values::sample_zero, values::sample_zero, values::sample_one),
 	frequency(static_cast<types::index>(1), values::sample_zero, values::sample_zero, values::sample_one)
 {
-	channels_input_num_set(0);
-	channels_output_num_set(1);
 	parameter_expose("frequency", frequency);
-	//parameter_expose_pluggable("frequency");
+	parameter_expose_pluggable("frequency");
 }
 
 cdsp::primitive::table::oscillator::base::base(types::sample _phase_initial) :
-	primitive::parameterized<parameter::rate_audio::schedule_ramp_static>(),
+	primitive::parameterized<parameter::rate_audio::schedule_ramp_static>(0, 1),
+	primitive::pluggable(0, 1),
 	table::abstract(),
 	phase_initial(_phase_initial, values::sample_zero, values::sample_one),
 	frequency(static_cast<types::index>(1), values::sample_zero, values::sample_zero, values::sample_one)
 {
-	channels_input_num_set(0);
-	channels_output_num_set(1);
 	parameter_expose("frequency", frequency);
-	//parameter_expose_pluggable("frequency");
+	parameter_expose_pluggable("frequency");
 }
 
 cdsp::primitive::table::oscillator::base::base(types::sample _phase_initial, types::sample _frequency) :
-	primitive::parameterized<parameter::rate_audio::schedule_ramp_static>(),
+	primitive::parameterized<parameter::rate_audio::schedule_ramp_static>(0, 1),
+	primitive::pluggable(0, 1),
 	table::abstract(),
 	phase_initial(_phase_initial, values::sample_zero, values::sample_one),
 	frequency(static_cast<types::index>(1), _frequency, values::sample_zero, values::sample_one)
@@ -57,6 +56,7 @@ void cdsp::primitive::table::oscillator::base::table_set(types::index _table_len
 
 void cdsp::primitive::table::oscillator::base::prepare(prepare_signature) {
 	primitive::parameterized<parameter::rate_audio::schedule_ramp_static>::prepare(prepare_arguments);
+	primitive::pluggable::prepare(prepare_arguments);
 
 	// check to make sure we have a table to interpolate
 #ifdef CDSP_DEBUG_DSP
@@ -103,7 +103,7 @@ void cdsp::primitive::table::oscillator::interpolate_4::perform(perform_signatur
 
 	// get parameter values
 	const types::sample* frequency_buffer;
-	if (false) {//(parameter_plugged("frequency")) {
+	if (parameter_plugged("frequency")) {
 		parameter::rate_audio::signal& frequency_plug = parameter_plugged_get("frequency");
 		types::channel frequency_plug_channel = frequency_plug.channel_get();
 		frequency_plug.perform(buffer, block_size_leq, frequency_plug_channel, offset_sample);

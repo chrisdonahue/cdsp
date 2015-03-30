@@ -23,7 +23,7 @@ namespace cdsp {
 			block_size(0),
 			block_size_inverse(values::nan_64)
 		{
-#ifdef CDSP_DEBUG_DSP
+#if defined(CDSP_DEBUG_DSP) || defined(CDSP_DEBUG_API)
 			prepared = false;
 #endif
 		};
@@ -33,13 +33,13 @@ namespace cdsp {
 			sample_rate_inverse = values::one_64 / sample_rate;
 			block_size = _block_size;
 			block_size_inverse = values::one_64 / static_cast<types::cont_64>(block_size);
-#ifdef CDSP_DEBUG_DSP
+#if defined(CDSP_DEBUG_DSP) || defined(CDSP_DEBUG_API)
 			prepared = true;
 #endif
 		};
 
 		virtual void release() {
-#ifdef CDSP_DEBUG_DSP
+#if defined(CDSP_DEBUG_DSP) || defined(CDSP_DEBUG_API)
 			prepared = false;
 #endif
 		};
@@ -55,7 +55,7 @@ namespace cdsp {
 		types::cont_64 sample_rate_inverse;
 		types::index block_size;
 		types::cont_64 block_size_inverse;
-#ifdef CDSP_DEBUG_DSP
+#if defined(CDSP_DEBUG_DSP) || defined(CDSP_DEBUG_API)
 		types::boolean prepared;
 #endif
 	};

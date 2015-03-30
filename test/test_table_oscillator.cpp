@@ -27,8 +27,8 @@ int main(int argc, char* argv[])
 	osc_1.prepare(sample_rate, block_size);
 
 	// set next
-	//parameter::rate_audio::ramp_linear_automatic& osc_1_freq = static_cast<parameter::rate_audio::ramp_linear_automatic&>(osc_1.parameter_get("frequency"));
-	//osc_1_freq.value_next_set(static_cast<types::sample>(440.0 / sample_rate), length_seconds);
+	parameter::rate_audio::schedule_ramp_static& osc_1_freq = osc_1.parameter_get("frequency");
+	//osc_1_freq.schedule_ramp_linear(1.0, static_cast<types::sample>(440.0 / sample_rate));
 
 	// perform
 	types::index samples_remaining = output_buffer_length;
