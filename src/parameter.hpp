@@ -10,6 +10,8 @@
 #include "types.hpp"
 #include "values.hpp"
 
+#define parameter_scheduled_default parameter::rate_audio::scheduler_ramp
+
 namespace cdsp { namespace parameter {
 	template <typename T>
 	class base {

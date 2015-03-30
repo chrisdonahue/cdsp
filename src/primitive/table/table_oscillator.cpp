@@ -4,6 +4,7 @@
 	cdsp::primitive::table::oscillator::base
 */
 
+/*
 cdsp::primitive::table::oscillator::base::base() :
 	primitive::parameterized<parameter::rate_audio::schedule_ramp_static>(0, 1),
 	primitive::pluggable(0, 1),
@@ -81,11 +82,13 @@ void cdsp::primitive::table::oscillator::base::phase_reset() {
 void cdsp::primitive::table::oscillator::base::phase_initial_set(types::sample _phase_initial) {
 	phase_initial.value_set(_phase_initial);
 };
+*/
 
 /*
 	cdsp::primitive::table::oscillator::interpolate_4
 */
 
+/*
 cdsp::primitive::table::oscillator::interpolate_4::interpolate_4() :
 	base()
 {}
@@ -161,3 +164,5 @@ void cdsp::primitive::table::oscillator::interpolate_4::perform(perform_signatur
 		table_index += table_length_sample;
 	}
 };
+
+*/
