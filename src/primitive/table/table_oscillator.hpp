@@ -38,7 +38,7 @@ namespace cdsp { namespace primitive { namespace table { namespace oscillator {
 			table::abstract::table_set(_table_length, _table);
 
 #ifdef CDSP_DEBUG_API
-			if (!helpers::is_power_of_two(_table_length)) {
+			if (!helper::is_power_of_two(_table_length)) {
 				throw exception::runtime("table length that was not a power of two");
 			}
 #endif
@@ -94,9 +94,9 @@ namespace cdsp { namespace primitive { namespace table { namespace oscillator {
 	template <class frequency_parameter_type=parameter_scheduled_default>
 	class interpolate_4 : public base<frequency_parameter_type> {
 	public:
-		interpolate_4() : base<frequency_parameter_type>();
-		interpolate_4(types::sample _phase) : base<frequency_parameter_type>(_phase);
-		interpolate_4(types::sample _phase, types::sample _frequency) : base<frequency_parameter_type>(_phase, _frequency);
+		interpolate_4() : base<frequency_parameter_type>() {};
+		interpolate_4(types::sample _phase) : base<frequency_parameter_type>(_phase) {};
+		interpolate_4(types::sample _phase, types::sample _frequency) : base<frequency_parameter_type>(_phase, _frequency) {};
 
 		void perform(perform_signature_defaults) {
 			base::perform(perform_arguments);

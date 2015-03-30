@@ -27,7 +27,7 @@ int main(int argc, char* argv[])
 	osc_1.prepare(sample_rate, block_size);
 
 	// set next
-	parameter::rate_audio::schedule_ramp_dynamic& osc_1_freq = osc_1.frequency_parameter_get();
+	parameter::rate_audio::scheduler_ramp_dynamic& osc_1_freq = osc_1.frequency_parameter_get();
 
 	// perform
 	types::index samples_remaining = output_buffer_length;

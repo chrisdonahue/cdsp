@@ -163,7 +163,7 @@ namespace cdsp { namespace parameter {
 
 	template <typename T>
 	class rate_block : public parameter::base<T> {
-	protected:
+	public:
 		rate_block() : parameter::base<T>() {};
 		rate_block(T value_initial) : parameter::base<T>(value_initial) {};
 		rate_block(T value_min, T value_max) : parameter::base<T>(value_min, value_max) {};
