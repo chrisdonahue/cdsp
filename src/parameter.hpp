@@ -287,9 +287,6 @@ namespace cdsp { namespace parameter {
 
 			protected:
 				schedule_pq(types::sample* _scheduler_value) : scheduler_value(_scheduler_value) {};
-				~schedule_pq() {
-					clear();
-				}
 
 				types::sample* scheduler_value;
 			};
@@ -319,6 +316,9 @@ namespace cdsp { namespace parameter {
 			class schedule_pq_dynamic : public scheduler_ramp::schedule_pq {
 			public:
 				schedule_pq_dynamic(types::sample* scheduler_value) : scheduler_ramp::schedule_pq(scheduler_value), head(nullptr) {};
+				~schedule_pq_dynamic() {
+					clear();
+				};
 
 				void insert(ramp& _ramp_new) {
 					// allocate

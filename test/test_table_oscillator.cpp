@@ -53,4 +53,6 @@ int main(int argc, char* argv[])
 
 	// save
 	helper::io::wav_file_save("test_table_oscillator.wav", sample_rate, 32, output_buffer, 0);
+
+	return 0;
 };
