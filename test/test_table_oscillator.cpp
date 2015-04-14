@@ -29,6 +29,12 @@ int main(int argc, char* argv[])
 	// set next
 	parameter::rate_audio::scheduler_ramp_dynamic& osc_1_freq = osc_1.frequency_parameter_get();
 
+	// queue up changes
+	osc_1_freq.schedule_ramp_linear(0.5, static_cast<types::sample>(220.0 / sample_rate));
+	osc_1_freq.schedule_ramp_linear(1.0, static_cast<types::sample>(880.0 / sample_rate));
+	osc_1_freq.schedule_ramp_linear(1.5, static_cast<types::sample>(55.0 / sample_rate));
+	osc_1_freq.schedule_ramp_linear(1.8, static_cast<types::sample>(27.5 / sample_rate));
+
 	// perform
 	types::index samples_remaining = output_buffer_length;
 	types::index samples_completed = 0;

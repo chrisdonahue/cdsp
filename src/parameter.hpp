@@ -186,29 +186,49 @@ namespace cdsp { namespace parameter {
 				base::perform(perform_arguments);
 
 				// ramp temporaries
-				ramp* ramp_current = schedule.top();
-				types::index ramp_current_samples_remaining = ramp_current->sample_relative;
-				types::sample ramp_current_rate = ramp_current->rate;
+				ramp* ramp_current = nullptr;
+				types::index ramp_current_samples_remaining;
+				types::sample ramp_current_rate;
+				types::index ramp_samples_completed = 0;
+
+				// assign temporaries if queue is not empty
+				if (!schedule.empty()) {
+					ramp_current = schedule.top();
+					ramp_current_samples_remaining = ramp_current->sample_relative;
+					ramp_current_rate = ramp_current->rate;
+				}
 
 				// fill buffer
 				types::index samples_remaining = block_size_leq;
 				types::sample* output = buffer.channel_pointer_write(offset_channel, offset_sample);
-				while (samples_remaining--) {
-					if (ramp_current_samples_remaining == 0) {
-						schedule.pop();
-						ramp_current = schedule.top();
-						ramp_current_samples_remaining = ramp_current->sample_relative;
-						ramp_current_rate = ramp_current->rate;
-					}
+				while (!schedule.empty() && samples_remaining) {
+					*(output++) = value;
+					samples_remaining--;
 
 					value += ramp_current_rate;
+					ramp_current_samples_remaining--;
+					ramp_samples_completed++;
+
+					if (ramp_current_samples_remaining == 0) {
+						value = ramp_current->value_at;
+						schedule.pop();
+						schedule.samples_completed(ramp_samples_completed);
+						ramp_samples_completed = 0;
+						if (!schedule.empty()) {
+							ramp_current = schedule.top();
+							ramp_current_samples_remaining = ramp_current->sample_relative;
+							ramp_current_rate = ramp_current->rate;
+						}
+					}
+				}
+				while (samples_remaining) {
 					*(output++) = value;
 
-					ramp_current_samples_remaining--;
+					samples_remaining--;
 				}
 
 				// update ramp sample relative
-				ramp_current->sample_relative = ramp_current_samples_remaining;
+				schedule.samples_completed(ramp_samples_completed);
 			};
 
 			void reset() {
@@ -261,7 +281,9 @@ namespace cdsp { namespace parameter {
 				virtual void insert(ramp& ramp_new) = 0;
 				virtual ramp* top() = 0;
 				virtual void pop() = 0;
-				virtual void clear() = 0;
+				virtual void clear() = 0 {};
+				virtual bool empty() = 0 { return true; };
+				virtual void samples_completed(types::index samples_num) = 0 {};
 
 			protected:
 				schedule_pq(types::sample* _scheduler_value) : scheduler_value(_scheduler_value) {};
@@ -282,13 +304,16 @@ namespace cdsp { namespace parameter {
 			schedule_pq& schedule;
 		};
 
+		inline scheduler_ramp::~scheduler_ramp() {
+			schedule.clear();
+		};
+
 		class scheduler_ramp_dynamic : public scheduler_ramp {
 		public:
 			scheduler_ramp_dynamic() : schedule_pq(&value), scheduler_ramp(schedule_pq) {};
 			scheduler_ramp_dynamic(types::sample _value_initial) : schedule_pq(&value), scheduler_ramp(schedule_pq, _value_initial) {};
 			scheduler_ramp_dynamic(types::sample value_min, types::sample value_max) : schedule_pq(&value), scheduler_ramp(schedule_pq, value_min, value_max) {};
 			scheduler_ramp_dynamic(types::sample _value_initial, types::sample value_min, types::sample value_max) : schedule_pq(&value), scheduler_ramp(schedule_pq, _value_initial, value_min, value_max) {};
-			~scheduler_ramp_dynamic() {};
 
 		private:
 			class schedule_pq_dynamic : public scheduler_ramp::schedule_pq {
@@ -305,25 +330,32 @@ namespace cdsp { namespace parameter {
 						head = ramp_new;
 						ramp_new->prev = nullptr;
 						ramp_new->next = nullptr;
+						rates_fix();
+						return;
 					}
 
 					// insert in list
+					ramp* ramp_prev = nullptr;
 					ramp* ramp_current = head;
 					while (ramp_current != nullptr) {
-						if (ramp_current->value_at < ramp_new->value_at) {
+						if (ramp_current->sample_relative < ramp_new->sample_relative) {
+							ramp_prev = ramp_current;
 							ramp_current = ramp_current->next;
 						}
-						else if (ramp_current->value_at == ramp_new->value_at) {
+						else if (ramp_current->sample_relative == ramp_new->sample_relative) {
 							*ramp_current = *ramp_new;
-							return;
 						}
 						else {
 							break;
 						}
 					}
 
+					// update head if necessary
+					if (ramp_current == head) {
+						head = ramp_new;
+					}
+
 					// update pointers
-					ramp* ramp_prev = ramp_current->prev;
 					ramp* ramp_next = ramp_current;
 					ramp_new->prev = ramp_prev;
 					ramp_new->next = ramp_next;
@@ -360,15 +392,30 @@ namespace cdsp { namespace parameter {
 					}
 				};
 
+				bool empty() {
+					return head == nullptr;
+				};
+
+				void samples_completed(types::index samples_num) {
+					ramp* ramp_current = head;
+					while (ramp_current != nullptr) {
+						ramp_current->sample_relative -= samples_num;
+						ramp_current = ramp_current->next;
+					}
+				};
+
 			private:
 				void rates_fix() {
 					// fix head (special case)
-					head->rate = (*scheduler_value) / static_cast<types::sample>(head->sample_relative);
+					head->rate = (head->value_at - *scheduler_value) / static_cast<types::sample>(head->sample_relative);
 
 					// fix list
-					ramp* ramp_current = head->next;
-					while (ramp_current != nullptr && ramp_current->next != nullptr) {
-						ramp_current->rate = (ramp_current->next->rate - ramp_current->rate) / static_cast<types::sample>(ramp_current->next->sample_relative);
+					ramp* ramp_prev = head;
+					ramp* ramp_current;
+					while (ramp_prev != nullptr && ramp_prev->next != nullptr) {
+						ramp_current = ramp_prev->next;
+						ramp_current->rate = (ramp_current->value_at - ramp_prev->value_at) / static_cast<types::sample>(ramp_current->sample_relative - ramp_prev->sample_relative);
+						ramp_prev = ramp_current;
 					}
 				};
 

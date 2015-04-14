@@ -63,8 +63,6 @@ namespace cdsp { namespace primitive { namespace table { namespace oscillator {
 			frequency.release();
 		};
 
-		virtual void perform(perform_signature_defaults) = 0;
-
 		void phase_reset() {
 #ifdef CDSP_DEBUG_API
 			if (table == nullptr) {
