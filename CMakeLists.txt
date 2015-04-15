@@ -129,9 +129,9 @@ set(HEADERS
 	src/types.hpp
 	src/values.hpp
 	src/primitive/primitive_base.hpp
-	src/primitive/operator/operator_base.hpp
-	src/primitive/operator/add.hpp
-	src/primitive/operator/multiply.hpp
+	src/primitive/math/operator_base.hpp
+	src/primitive/math/add.hpp
+	src/primitive/math/multiply.hpp
 	src/primitive/envelope/schedule_linear.hpp
 	src/primitive/table/table_abstract.hpp
 	src/primitive/table/table_oscillator.hpp
@@ -144,9 +144,9 @@ set(SOURCES
 	src/parameter.cpp
 	src/sample_buffer.cpp
 	src/primitive/primitive_base.cpp
-	src/primitive/operator/operator_base.cpp
-	src/primitive/operator/add.cpp
-	src/primitive/operator/multiply.cpp
+	src/primitive/math/operator_base.cpp
+	src/primitive/math/add.cpp
+	src/primitive/math/multiply.cpp
 	src/primitive/envelope/schedule_linear.cpp
 	src/primitive/table/table_abstract.cpp
 	src/primitive/table/table_oscillator.cpp
