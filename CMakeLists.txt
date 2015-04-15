@@ -119,7 +119,7 @@ include_directories("${PROJECT_SOURCE_DIR}/src")
 	#)
 
 set(HEADERS
-	src/base.hpp
+	src/dsp.hpp
 	src/cdsp.hpp
 	src/define.hpp
 	src/exception.hpp
@@ -140,7 +140,7 @@ set(HEADERS
 )
 	
 set(SOURCES
-	src/base.cpp
+	src/dsp.cpp
 	src/exception.cpp
 	src/helper.cpp
 	src/parameter.cpp
@@ -291,6 +291,7 @@ if (CDSP_BUILD_TESTS)
 	create_test_app(test_table_oscillator "test/test_table_oscillator.cpp")
 	create_test_app(test_additive "test/test_additive.cpp")
 	create_test_app(test_noise "test/test_noise.cpp")
+	create_test_app(test_impulse "test/test_impulse.cpp")
 
 	# Data files for running the test server.
 	#set(TEST_SERVER_DATA

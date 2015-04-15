@@ -1,5 +1,5 @@
-#ifndef CDSP_BASE
-#define CDSP_BASE
+#ifndef CDSP_DSP
+#define CDSP_DSP
 
 #define prepare_signature types::cont_64 _sample_rate, types::index _block_size
 #define prepare_arguments _sample_rate, _block_size

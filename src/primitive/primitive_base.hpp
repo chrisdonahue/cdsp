@@ -3,6 +3,7 @@
 
 #include <unordered_map>
 
+#include "../dsp.hpp"
 #include "../exception.hpp"
 #include "../parameter.hpp"
 #include "../sample_buffer.hpp"

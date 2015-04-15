@@ -1,5 +1,5 @@
-#ifndef CDSP_EXCEPTIONS
-#define CDSP_EXCEPTIONS
+#ifndef CDSP_EXCEPTION
+#define CDSP_EXCEPTION
 
 #include "define.hpp"
 

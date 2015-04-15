@@ -1,5 +1,5 @@
-#ifndef CDSP_PRIMITIVES_TABLES_OSCILLATOR
-#define CDSP_PRIMITIVES_TABLES_OSCILLATOR
+#ifndef CDSP_PRIMITIVE_TABLE_OSCILLATOR
+#define CDSP_PRIMITIVE_TABLE_OSCILLATOR
 
 #include "../primitive_base.hpp"
 #include "table_abstract.hpp"
