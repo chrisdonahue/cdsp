@@ -1,9 +1,7 @@
 #ifndef CDSP_PRIMITIVE_BASE
 #define CDSP_PRIMITIVE_BASE
 
-#include <set>
 #include <unordered_map>
-#include <utility>
 
 #include "../exception.hpp"
 #include "../parameter.hpp"
@@ -53,51 +51,101 @@ namespace cdsp { namespace primitive {
 		pluggable() : base() {};
 		pluggable(types::channel _channels_input_num, types::channel _channels_output_num) : base(_channels_input_num, _channels_output_num) {};
 
+		// TODO: confirm required pug registers in PREPARE and PERFORM
+
 		// TODO: have this return an iterator
+		/*
 		const std::set<types::string>& parameter_specifiers_pluggable_get() {
 			return const_cast<std::set<types::string>& >(parameter_specifiers_pluggable);
 		};
+		*/
 
 		// plugs
-		void parameter_plug(types::string parameter_specifier, parameter::rate_audio::signal& parameter_plug) {
-			types::boolean parameter_specifier_pluggable = parameter_specifiers_pluggable.find(parameter_specifier) != parameter_specifiers_pluggable.end();
+		void plug(types::string parameter_specifier, types::channel channel) {
+			auto it = plugs.find(parameter_specifier);
+			types::boolean pluggable = it != plugs.end();
 
 #ifdef CDSP_DEBUG_API
-			if (!parameter_specifier_pluggable) {
-				throw cdsp::exception::runtime("tried to plug a parameter specifier that was not registered as pluggable by this primitive");
-			}
+			cdsp::ensure(pluggable);
 #endif
 
-			parameters_rate_audio_plugged.insert(std::make_pair(parameter_specifier, &parameter_plug));
+			it->second.channel_set(channel);
 		};
 
-		void parameter_unplug(types::string parameter_specifier) {
-			parameters_rate_audio_plugged.erase(parameter_specifier);
+		void unplug(types::string parameter_specifier) {
+			auto it = plugs.find(parameter_specifier);
+			types::boolean pluggable = it != plugs.end();
+
+#ifdef CDSP_DEBUG_API
+			cdsp::ensure(pluggable);
+#endif
+
+			it->second.channel_unset();
 		};
 
 	protected:
-		void parameter_expose_pluggable(types::string parameter_specifier) {
-			parameter_specifiers_pluggable.insert(parameter_specifier);
+		void plug_register(types::string parameter_specifier, types::boolean required=values::boolean_false) {
+			plugs.insert(std::make_pair(parameter_specifier, plug_configuration()));
 		};
 
-		types::boolean parameter_plugged(types::string parameter_specifier) {
-			return parameters_rate_audio_plugged.find(parameter_specifier) != parameters_rate_audio_plugged.end();
+		void plug_register(types::string parameter_specifier, types::sample range_min, types::sample range_max, types::boolean required=values::boolean_false) {
+			plugs.insert(std::make_pair(parameter_specifier, plug_configuration(range_min, range_max)));
 		};
 
-		parameter::rate_audio::signal& parameter_plugged_get(types::string parameter_specifier) {
-			auto it = parameters_rate_audio_plugged.find(parameter_specifier);
-			types::boolean parameter_plugged = it != parameters_rate_audio_plugged.end();
+		types::boolean plugged(types::string parameter_specifier) {
+			return plugs.find(parameter_specifier) != plugs.end();
+		};
+
+		types::channel plug_channel_get(types::string parameter_specifier) {
+			auto it = plugs.find(parameter_specifier);
+			types::boolean pluggable = it != plugs.end();
 
 #ifdef CDSP_DEBUG_INTERNAL
-			cdsp::ensure(parameter_plugged);
+			cdsp::ensure(pluggable);
 #endif
 
-			return *(it->second);
+			return it->second.channel_get();
 		};
 
+
 	private:
-		std::set<types::string> parameter_specifiers_pluggable;
-		std::unordered_map<types::string, parameter::rate_audio::signal* > parameters_rate_audio_plugged;
+		class plug_configuration {
+		public:
+			plug_configuration() :
+				range_valid(values::boolean_false),
+				channel_valid(values::boolean_false)
+			{};
+
+			plug_configuration(types::sample _range_min, types::sample _range_max) :
+				range_min(_range_min),
+				range_max(_range_max),
+				range_valid(values::boolean_true),
+				channel_valid(values::boolean_false)
+			{};
+
+			types::channel channel_get() {
+				return channel;
+			};
+
+			void channel_set(types::channel _channel) {
+				channel = _channel;
+				channel_valid = values::boolean_true;
+			};
+			
+			void channel_unset() {
+				channel_valid = values::boolean_false;
+			};
+
+		private:
+			types::boolean range_valid;
+			types::sample range_min;
+			types::sample range_max;
+
+			types::boolean channel_valid;
+			types::channel channel;
+		};
+
+		std::unordered_map<types::string, plug_configuration > plugs;
 	};
 }}
 

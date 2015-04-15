@@ -125,7 +125,7 @@ set(SOURCES
 	src/parameter.cpp
 	src/sample_buffer.cpp
 	src/primitive/primitive_base.cpp
-	src/primitive/envelope/schedule_linear.hpp
+	src/primitive/envelope/schedule_linear.cpp
 	src/primitive/table/table_abstract.cpp
 	src/primitive/table/table_oscillator.cpp
 )

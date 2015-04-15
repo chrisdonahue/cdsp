@@ -51,7 +51,7 @@ namespace cdsp { namespace values {
 	// index
 	const types::index index_zero				= static_cast<types::index>(0);
 
-	// bolean
+	// boolean
 	const types::boolean boolean_true			= static_cast<types::boolean>(true);
 	const types::boolean boolean_false			= static_cast<types::boolean>(false);
 
@@ -72,6 +72,8 @@ namespace cdsp { namespace values {
 	const types::sample identity_multiplicative	= static_cast<types::sample>(1.0f);
 
 	const types::sample sample_dc_block_r		= static_cast<types::sample>(0.995f);
+
+	const types::sample range_undefined			= static_cast<types::sample>(nan_32);
 #elif CDSP_SAMPLE_64
 	const types::sample sample_silence			= static_cast<types::sample>(0.0);
 	const types::sample sample_line_level_n		= static_cast<types::sample>(-1.0);

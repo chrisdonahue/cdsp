@@ -6,7 +6,6 @@
 #include "../../helper.hpp"
 
 namespace cdsp { namespace primitive { namespace table { namespace oscillator {
-	template <class frequency_parameter_type=parameter_scheduled_default>
 	class base :	public primitive::pluggable,
 					public table::abstract
 	{
@@ -16,21 +15,30 @@ namespace cdsp { namespace primitive { namespace table { namespace oscillator {
 			table::abstract(),
 			phase_initial(values::sample_zero, values::sample_zero, values::sample_one),
 			frequency(values::sample_zero, values::sample_zero, values::sample_one)
-		{};
+		{
+			plug_register("phase_initial", values::sample_zero, values::sample_one, values::boolean_false);
+			plug_register("frequency", values::sample_zero, values::sample_one, values::boolean_false);
+		};
 
 		base(types::sample _phase) :
 			primitive::pluggable(0, 1),
 			table::abstract(),
-			phase_initial(_phase_initial, values::sample_zero, values::sample_one),
+			phase_initial(_phase, values::sample_zero, values::sample_one),
 			frequency(values::sample_zero, values::sample_zero, values::sample_one)
-		{};
+		{
+			plug_register("phase_initial", values::sample_zero, values::sample_one, values::boolean_false);
+			plug_register("frequency", values::sample_zero, values::sample_one, values::boolean_false);
+		};
 
 		base(types::sample _phase, types::sample _frequency) :
 			primitive::pluggable(0, 1),
 			table::abstract(),
 			phase_initial(_phase, values::sample_zero, values::sample_one),
 			frequency(_frequency, values::sample_zero, values::sample_one)
-		{};
+		{
+			plug_register("phase_initial", values::sample_zero, values::sample_one, values::boolean_false);
+			plug_register("frequency", values::sample_zero, values::sample_one, values::boolean_false);
+		};
 
 		~base() {};
 
@@ -56,11 +64,10 @@ namespace cdsp { namespace primitive { namespace table { namespace oscillator {
 				throw cdsp::exception::runtime("prepare called before table_set");
 			}
 #endif
-			frequency.prepare(prepare_arguments);
 		};
 
 		void release() {
-			frequency.release();
+			primitive::pluggable::release();
 		};
 
 		void phase_reset() {
@@ -76,40 +83,37 @@ namespace cdsp { namespace primitive { namespace table { namespace oscillator {
 			phase_initial.value_set(_phase_initial);
 		};
 
-		frequency_parameter_type& frequency_parameter_get() {
-			return frequency;
+		void frequency_set(types::sample _frequency) {
+			frequency.value_set(_frequency);
 		};
 
 	protected:
 		types::index table_mask;
 		types::sample table_length_sample;
-
 		types::sample table_index;
-		parameter::rate_block<types::sample> phase_initial;
-		frequency_parameter_type frequency;
+
+		parameter::base<types::sample> phase_initial;
+		parameter::base<types::sample> frequency;
 	};
 
-	template <class frequency_parameter_type=parameter_scheduled_default>
-	class interpolate_4 : public base<frequency_parameter_type> {
+	class interpolate_4 : public base {
 	public:
-		interpolate_4() : base<frequency_parameter_type>() {};
-		interpolate_4(types::sample _phase) : base<frequency_parameter_type>(_phase) {};
-		interpolate_4(types::sample _phase, types::sample _frequency) : base<frequency_parameter_type>(_phase, _frequency) {};
+		interpolate_4() : base() {};
+		interpolate_4(types::sample _phase) : base(_phase) {};
+		interpolate_4(types::sample _phase, types::sample _frequency) : base(_phase, _frequency) {};
 
 		void perform(perform_signature_defaults) {
 			base::perform(perform_arguments);
 
 			// get parameter values
-			const types::sample* frequency_buffer;
-			if (parameter_plugged("frequency")) {
-				parameter::rate_audio::signal& frequency_plug = parameter_plugged_get("frequency");
-				types::channel frequency_plug_channel = frequency_plug.channel_get();
-				frequency_plug.perform(buffer, block_size_leq, frequency_plug_channel, offset_sample);
+			const types::sample* frequency_buffer = nullptr;
+			types::sample frequency_value;
+			if (plugged("frequency")) {
+				types::channel frequency_plug_channel = plug_channel_get("frequency");
 				frequency_buffer = buffer.channel_pointer_read(frequency_plug_channel, offset_sample);
 			}
 			else {
-				frequency.perform(perform_arguments);
-				frequency_buffer = buffer.channel_pointer_read(offset_channel, offset_sample);
+				frequency_value = frequency.value_get();
 			}
 
 			// create state

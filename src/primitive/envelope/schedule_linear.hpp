@@ -1,91 +1,260 @@
-#ifndef CDSP_PRIMITIVES_ENVELOPES_INTERPOLATE_LINEAR
-#define CDSP_PRIMITIVES_ENVELOPES_INTERPOLATE_LINEAR
+#ifndef CDSP_PRIMITIVE_ENVELOPE_SCHEDULE_LINEAR_DYNAMIC
+#define CDSP_PRIMITIVE_ENVELOPE_SCHEDULE_LINEAR_DYNAMIC
 
-#include <tuple>
+#include "../primitive_base.hpp"
 
-#include "envelopes_base.hpp"
-
-namespace cdsp { namespace primitives { namespace envelopes {
-	template <types::disc_32_u points_num>
-	class interpolate_linear : public base<points_num> {
+namespace cdsp { namespace primitive { namespace envelope {
+	class schedule_linear : public primitive::base {
 	public:
-		interpolate_linear() :
-			base<points_num>(),
-			points_increments(points_num),
-			point_samples_remaining(0),
-			point_increment_current(values::sample_zero)
-		{};
+		void perform(perform_signature_defaults) {
+			base::perform(perform_arguments);
 
-		interpolate_linear(types::sample _value_initial) :
-			base<points_num>(_value_initial),
-			points_increments(points_num),
-			point_samples_remaining(0),
-			point_increment_current(values::sample_zero)
-		{};
+			// ramp temporaries
+			ramp* ramp_current = nullptr;
+			types::index ramp_current_samples_remaining;
+			types::sample ramp_current_rate;
+			types::index ramp_samples_completed = 0;
 
-		void perform(sample_buffer& buffer, types::disc_32_u block_size_leq, types::channel offset_channel = 0, types::index offset_sample = 0) {
-			base<points_num>::perform(buffer, block_size_leq, offset_channel, offset_sample);
+			// assign temporaries if queue is not empty
+			if (!queue.empty()) {
+				ramp_current = queue.top();
+				ramp_current_samples_remaining = ramp_current->sample_relative;
+				ramp_current_rate = ramp_current->rate;
+			}
 
-			types::sample* output = buffer.channel_pointer_write(offset_channel, offset_sample);
+			// fill buffer
 			types::index samples_remaining = block_size_leq;
+			types::sample* output = buffer.channel_pointer_write(offset_channel, offset_sample);
+			while (!queue.empty() && samples_remaining) {
+				*(output++) = value;
+				samples_remaining--;
 
-			// holding
-			if (points_index_current >= points.size()) {
-				while (samples_remaining--) {
-					*(output++) = value;
-				}
-			}
-			// ramping
-			else {
-				while (samples_remaining--) {
-					if (point_samples_remaining <= 0) {
-						value = points.at(points_index_current).second;
-						points_index_current += 1;
-						if (points_index_current == points.size()) {
-							point_samples_remaining = 0;
-							point_increment_current = values::sample_zero;
-						}
-						else {
-							point_samples_remaining = points_increments.at(points_index_current).first;
-							point_increment_current = points_increments.at(points_index_current).second;
-						}
+				value += ramp_current_rate;
+				ramp_current_samples_remaining--;
+				ramp_samples_completed++;
+
+				if (ramp_current_samples_remaining == 0) {
+					value = ramp_current->value_at;
+					queue.pop();
+					queue.samples_completed(ramp_samples_completed);
+					ramp_samples_completed = 0;
+					if (!queue.empty()) {
+						ramp_current = queue.top();
+						ramp_current_samples_remaining = ramp_current->sample_relative;
+						ramp_current_rate = ramp_current->rate;
 					}
-
-					*(output++) = value;
-					value += point_increment_current;
-					point_samples_remaining--;
 				}
 			}
+			while (samples_remaining) {
+				*(output++) = value;
+
+				samples_remaining--;
+			}
+
+			// update ramp sample relative
+			queue.samples_completed(ramp_samples_completed);
 		};
-	
-		void point_set(types::disc_32_u point_index, types::time length_s, types::sample value) {
-			base<points_num>::point_set(point_index, length_s, value);
 
-			// calculate length of segment in samples
-			types::index point_length = static_cast<types::index>(length_s * sample_rate);
-			if (point_length == 0) {
-				point_length = 1;
-			}
-
-			// calculate linear increment
-			types::sample point_increment;
-			if (point_index == 0) {
-				point_increment = (value - value_initial)/static_cast<types::sample>(point_length);
-				point_samples_remaining = point_length;
-				point_increment_current = point_increment;
-			}
-			else {
-				point_increment = (value - points.at(point_index - 1).second) / static_cast<types::sample>(point_length);
-			}
-
-			// add point increment
-			points_increments[point_index] = std::make_pair(point_length, point_increment);
+		void reset() {
+			queue.clear();
+			value = value_initial;
 		};
+
+		void schedule_clear() {
+			queue.clear();
+		};
+
+		void schedule(types::index sample_relative, types::sample value_at) {
+			ramp ramp_new;
+			ramp_new.type = ramp_type::linear;
+			ramp_new.sample_relative = sample_relative;
+			ramp_new.value_at = value_at;
+			queue.insert(ramp_new);
+		};
+
+		void schedule(types::time time_relative, types::sample value_at) {
+#ifdef CDSP_DEBUG_API
+			if (!prepared) {
+				throw exception::runtime("schedule_ramp_linear called with time parameter before prepare");
+			}
+#endif
+
+			schedule(static_cast<types::index>(sample_rate * time_relative), value_at);
+		};
+
+	protected:
+		enum ramp_type {
+			linear,
+			exponential
+		};
+
+		struct ramp {
+			// scheduler_ramp will set these
+			ramp_type type;
+			types::index sample_relative;
+			types::sample value_at;
+
+			// schedule_pq subclasses will set these
+			types::sample rate;
+			ramp* prev;
+			ramp* next;
+		};
+
+		class schedule_pq {
+		public:
+			virtual void insert(ramp& ramp_new) = 0;
+			virtual ramp* top() = 0;
+			virtual void pop() = 0;
+			virtual void clear() = 0 {};
+			virtual bool empty() = 0 { return true; };
+			virtual void samples_completed(types::index samples_num) = 0 {};
+
+		protected:
+			schedule_pq(types::sample* _scheduler_value) : scheduler_value(_scheduler_value) {};
+
+			types::sample* scheduler_value;
+		};
+
+		schedule_linear(schedule_pq& _schedule, types::sample _value_initial, types::sample _value_min, types::sample _value_max) :
+			primitive::base(0, 1),
+			queue(_schedule),
+			value_initial(_value_initial),
+			value(_value_initial),
+			value_min(_value_min),
+			value_max(_value_max)
+		{};
+		virtual ~schedule_linear() = 0;
+
+		types::sample value_initial;
+		types::sample value;
+		types::sample value_min;
+		types::sample value_max;
 
 	private:
-		std::vector<std::pair<types::index, types::sample> > points_increments;
-		types::index point_samples_remaining;
-		types::sample point_increment_current;
+		schedule_pq& queue;
+	};
+
+	schedule_linear::~schedule_linear() {};
+
+	class schedule_linear_dynamic : public schedule_linear {
+	public:
+		schedule_linear_dynamic(types::sample _value_initial, types::sample _value_min, types::sample _value_max) :
+			schedule_pq(&value),
+			schedule_linear(schedule_pq, _value_initial, _value_min, _value_max)
+		{};
+
+	private:
+		class schedule_pq_dynamic : public schedule_linear::schedule_pq {
+		public:
+			schedule_pq_dynamic(types::sample* scheduler_value) : schedule_linear::schedule_pq(scheduler_value), head(nullptr) {};
+			~schedule_pq_dynamic() {
+				clear();
+			};
+
+			void insert(ramp& _ramp_new) {
+				// allocate
+				ramp* ramp_new = new ramp;
+				*ramp_new = _ramp_new;
+
+				// insert at head
+				if (head == nullptr) {
+					head = ramp_new;
+					ramp_new->prev = nullptr;
+					ramp_new->next = nullptr;
+					rates_fix();
+					return;
+				}
+
+				// insert in list
+				ramp* ramp_prev = nullptr;
+				ramp* ramp_current = head;
+				while (ramp_current != nullptr) {
+					if (ramp_current->sample_relative < ramp_new->sample_relative) {
+						ramp_prev = ramp_current;
+						ramp_current = ramp_current->next;
+					}
+					else if (ramp_current->sample_relative == ramp_new->sample_relative) {
+						*ramp_current = *ramp_new;
+					}
+					else {
+						break;
+					}
+				}
+
+				// update head if necessary
+				if (ramp_current == head) {
+					head = ramp_new;
+				}
+
+				// update pointers
+				ramp* ramp_next = ramp_current;
+				ramp_new->prev = ramp_prev;
+				ramp_new->next = ramp_next;
+				if (ramp_prev != nullptr) {
+					ramp_prev->next = ramp_new;
+				}
+				if (ramp_next != nullptr) {
+					ramp_next->prev = ramp_new;
+				}
+
+				// fix rates
+				rates_fix();
+			};
+
+			ramp* top() {
+				return head;
+			};
+
+			void pop() {
+				if (head == nullptr) {
+					return;
+				}
+
+				ramp* ramp_old = head;
+				head = ramp_old->next;
+				delete ramp_old;
+			};
+
+			void clear() {
+				ramp* ramp_current = head;
+				while (ramp_current != nullptr) {
+					ramp* ramp_next = ramp_current->next;
+					delete ramp_current;
+					ramp_current = ramp_next;
+				}
+			};
+
+			bool empty() {
+				return head == nullptr;
+			};
+
+			void samples_completed(types::index samples_num) {
+				ramp* ramp_current = head;
+				while (ramp_current != nullptr) {
+					ramp_current->sample_relative -= samples_num;
+					ramp_current = ramp_current->next;
+				}
+			};
+
+		private:
+			void rates_fix() {
+				// fix head (special case)
+				head->rate = (head->value_at - *scheduler_value) / static_cast<types::sample>(head->sample_relative);
+
+				// fix list
+				ramp* ramp_prev = head;
+				ramp* ramp_current;
+				while (ramp_prev != nullptr && ramp_prev->next != nullptr) {
+					ramp_current = ramp_prev->next;
+					ramp_current->rate = (ramp_current->value_at - ramp_prev->value_at) / static_cast<types::sample>(ramp_current->sample_relative - ramp_prev->sample_relative);
+					ramp_prev = ramp_current;
+				}
+			};
+
+			ramp* head;
+		};
+
+		schedule_pq_dynamic schedule_pq;
 	};
 }}}
 
