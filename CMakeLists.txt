@@ -118,18 +118,6 @@ include_directories("${PROJECT_SOURCE_DIR}/src")
 	#"${PROJECT_BINARY_DIR}/CDSP_config.h"
 	#)
 
-set(SOURCES
-	src/base.cpp
-	src/exception.cpp
-	src/helper.cpp
-	src/parameter.cpp
-	src/sample_buffer.cpp
-	src/primitive/primitive_base.cpp
-	src/primitive/envelope/schedule_linear.cpp
-	src/primitive/table/table_abstract.cpp
-	src/primitive/table/table_oscillator.cpp
-)
-
 set(HEADERS
 	src/base.hpp
 	src/cdsp.hpp
@@ -141,9 +129,27 @@ set(HEADERS
 	src/types.hpp
 	src/values.hpp
 	src/primitive/primitive_base.hpp
+	src/primitive/operator/operator_base.hpp
+	src/primitive/operator/add.hpp
+	src/primitive/operator/multiply.hpp
 	src/primitive/envelope/schedule_linear.hpp
 	src/primitive/table/table_abstract.hpp
 	src/primitive/table/table_oscillator.hpp
+)
+	
+set(SOURCES
+	src/base.cpp
+	src/exception.cpp
+	src/helper.cpp
+	src/parameter.cpp
+	src/sample_buffer.cpp
+	src/primitive/primitive_base.cpp
+	src/primitive/operator/operator_base.cpp
+	src/primitive/operator/add.cpp
+	src/primitive/operator/multiply.cpp
+	src/primitive/envelope/schedule_linear.cpp
+	src/primitive/table/table_abstract.cpp
+	src/primitive/table/table_oscillator.cpp
 )
 
 #if (NOT CDSP_WITHOUT_CLIENT)

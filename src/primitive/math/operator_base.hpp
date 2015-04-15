@@ -1,16 +1,16 @@
 #ifndef CDSP_PRIMITIVES_OPERATORS_BASE
 #define CDSP_PRIMITIVES_OPERATORS_BASE
 
-#include "../primitives_base.hpp"
+#include "../primitive_base.hpp"
 
-namespace cdsp { namespace primitives { namespace operators {
-	class base : public primitives::base {
+namespace cdsp { namespace primitive { namespace math {
+	class operator_base : public primitive::base {
 	public:
-		base();
-		base(types::channel operands_num);
-		base(types::sample operand);
+		operator_base();
+		operator_base(types::channel inputs_num);
+		operator_base(types::sample operand);
 
-		void operands_num_set(types::channel operands_num);
+		void operands_num_set(types::channel inputs_num);
 
 		void operand_set(types::sample _operand);
 		void operand_next_set(types::sample operand_next);
@@ -20,7 +20,7 @@ namespace cdsp { namespace primitives { namespace operators {
 
 	protected:
 		types::boolean operand_use;
-		parameters::ramp_linear_automatic operand;
+		parameter::base<types::sample> operand;
 	};
 }}}
 
