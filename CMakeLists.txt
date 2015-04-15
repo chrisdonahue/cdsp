@@ -285,6 +285,7 @@ if (CDSP_BUILD_TESTS)
 
 	# test apps
 	create_test_app(test_table_oscillator "test/test_table_oscillator.cpp")
+	create_test_app(test_additive "test/test_additive.cpp")
 
 	# Data files for running the test server.
 	#set(TEST_SERVER_DATA

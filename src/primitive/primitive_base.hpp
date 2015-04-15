@@ -69,6 +69,7 @@ namespace cdsp { namespace primitive {
 			cdsp::ensure(pluggable);
 #endif
 
+			plugged_currently.insert(parameter_specifier);
 			it->second.channel_set(channel);
 		};
 
@@ -80,6 +81,7 @@ namespace cdsp { namespace primitive {
 			cdsp::ensure(pluggable);
 #endif
 
+			plugged_currently.erase(parameter_specifier);
 			it->second.channel_unset();
 		};
 
@@ -93,7 +95,7 @@ namespace cdsp { namespace primitive {
 		};
 
 		types::boolean plugged(types::string parameter_specifier) {
-			return plugs.find(parameter_specifier) != plugs.end();
+			return plugged_currently.find(parameter_specifier) != plugged_currently.end();
 		};
 
 		types::channel plug_channel_get(types::string parameter_specifier) {
@@ -146,6 +148,7 @@ namespace cdsp { namespace primitive {
 		};
 
 		std::unordered_map<types::string, plug_configuration > plugs;
+		std::set<types::string> plugged_currently;
 	};
 }}
 

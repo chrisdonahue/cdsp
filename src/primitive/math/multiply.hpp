@@ -1,21 +1,17 @@
-#ifndef CDSP_PRIMITIVES_OPERATORS_MULTIPLY
-#define CDSP_PRIMITIVES_OPERATORS_MULTIPLY
+#ifndef CDSP_PRIMITIVE_MATH_MULTIPLY
+#define CDSP_PRIMITIVE_MATH_MULTIPLY
 
-#include "operators_base.hpp"
+#include "operator_base.hpp"
 
-namespace cdsp {
-	namespace primitives {
-		namespace operators {
-			class multiply : public base {
-			public:
-				multiply() : base() {};
-				multiply(types::channel operands_num) : base(operands_num) {};
-				multiply(types::sample operand) : base(operand) {};
+namespace cdsp { namespace primitive { namespace math {
+	class multiply : public operator_base {
+	public:
+		multiply() : operator_base() {};
+		multiply(types::sample operand) : operator_base(operand) {};
+		multiply(types::channel inputs_num) : operator_base(inputs_num) {};
 
-				void perform(sample_buffer& buffer, types::disc_32_u block_size_leq, types::channel offset_channel = 0, types::index offset_sample = 0);
-			};
-		}
-	}
-}
+		void perform(perform_signature_defaults);
+	};
+}}}
 
 #endif

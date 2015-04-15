@@ -131,7 +131,12 @@ namespace cdsp { namespace primitive { namespace table { namespace oscillator {
 			types::sample* output = buffer.channel_pointer_write(offset_channel, offset_sample);
 			while (samples_remaining--) {
 				// get frequency
-				frequency = *(frequency_buffer++);
+				if (frequency_buffer != nullptr) {
+					frequency = *(frequency_buffer++);
+				}
+				else {
+					frequency = frequency_value;
+				}
 
 				// calculate phase increment
 				table_index_increment = frequency * table_length_sample;

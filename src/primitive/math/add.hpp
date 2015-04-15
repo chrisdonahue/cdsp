@@ -1,16 +1,16 @@
-#ifndef CDSP_PRIMITIVES_OPERATORS_ADD
-#define CDSP_PRIMITIVES_OPERATORS_ADD
+#ifndef CDSP_PRIMITIVE_MATH_ADD
+#define CDSP_PRIMITIVE_MATH_ADD
 
-#include "operators_base.hpp"
+#include "operator_base.hpp"
 
-namespace cdsp { namespace primitives { namespace operators {
-	class add : public base {
+namespace cdsp { namespace primitive { namespace math {
+	class add : public operator_base {
 	public:
-		add() : base() {};
-		add(types::channel operands_num) : base(operands_num) {};
-		add(types::sample operand) : base(operand) {};
+		add() : operator_base() {};
+		add(types::sample operand) : operator_base(operand) {};
+		add(types::channel inputs_num) : operator_base(inputs_num) {};
 
-		void perform(sample_buffer& buffer, types::disc_32_u block_size_leq, types::channel offset_channel = 0, types::index offset_sample = 0);
+		void perform(perform_signature_defaults);
 	};
 }}}
 
