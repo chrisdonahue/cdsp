@@ -125,6 +125,7 @@ set(SOURCES
 	src/parameter.cpp
 	src/sample_buffer.cpp
 	src/primitive/primitive_base.cpp
+	src/primitive/envelope/schedule_linear.hpp
 	src/primitive/table/table_abstract.cpp
 	src/primitive/table/table_oscillator.cpp
 )
@@ -134,13 +135,13 @@ set(HEADERS
 	src/cdsp.hpp
 	src/define.hpp
 	src/exception.hpp
-	src/graph.hpp
 	src/helper.hpp
 	src/parameter.hpp
 	src/sample_buffer.hpp
 	src/types.hpp
 	src/values.hpp
 	src/primitive/primitive_base.hpp
+	src/primitive/envelope/schedule_linear.hpp
 	src/primitive/table/table_abstract.hpp
 	src/primitive/table/table_oscillator.hpp
 )

@@ -1,5 +1,4 @@
 short term:
-	expose value_next api to parameter::rate_audio
 	cdsp::circular_buffer for envelopes
 	envelopes overhaul (align with parameter) (can this be the same code as rate_audio?)
 	make interpolate code a macro
@@ -12,6 +11,7 @@ long term:
 	test on mac, linux, ARM
 
 optimizations:
+	parameter.hpp struct ramp sample_relative is relative to previous link in the chain, not to current perform sample (allows for only one ramp struct update per perform loop)
 	phasor.hpp and table_hpp UNITBIT32
 
 bugfixes:
