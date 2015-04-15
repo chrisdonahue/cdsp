@@ -129,6 +129,8 @@ set(HEADERS
 	src/types.hpp
 	src/values.hpp
 	src/primitive/primitive_base.hpp
+	src/primitive/generator/impulse.hpp
+	src/primitive/generator/noise.hpp
 	src/primitive/math/operator_base.hpp
 	src/primitive/math/add.hpp
 	src/primitive/math/multiply.hpp
@@ -144,6 +146,8 @@ set(SOURCES
 	src/parameter.cpp
 	src/sample_buffer.cpp
 	src/primitive/primitive_base.cpp
+	src/primitive/generator/impulse.cpp
+	src/primitive/generator/noise.cpp
 	src/primitive/math/operator_base.cpp
 	src/primitive/math/add.cpp
 	src/primitive/math/multiply.cpp
@@ -286,6 +290,7 @@ if (CDSP_BUILD_TESTS)
 	# test apps
 	create_test_app(test_table_oscillator "test/test_table_oscillator.cpp")
 	create_test_app(test_additive "test/test_additive.cpp")
+	create_test_app(test_noise "test/test_noise.cpp")
 
 	# Data files for running the test server.
 	#set(TEST_SERVER_DATA

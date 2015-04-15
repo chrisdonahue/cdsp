@@ -7,6 +7,8 @@
 #include "types.hpp"
 #include "values.hpp"
 
+#include "primitive/generator/impulse.hpp"
+#include "primitive/generator/noise.hpp"
 #include "primitive/math/add.hpp"
 #include "primitive/math/multiply.hpp"
 #include "primitive/envelope/schedule_linear.hpp"
