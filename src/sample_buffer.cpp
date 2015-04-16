@@ -44,7 +44,7 @@ void cdsp::sample_buffer::buffer_free() {
 void cdsp::sample_buffer::resize(types::channel _channels_num, types::index _channel_buffer_length) {
 	channels_num = _channels_num;
 	channel_buffer_length = _channel_buffer_length;
-	if (!(channels_num & channel_buffer_length)) {
+	if (channels_num || channel_buffer_length) {
 		buffer_reallocate();
 	}
 }
